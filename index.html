@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <title>A Pleasant Surprise</title>
+        <meta charset="UTF-8" name="viewpoint" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="./assets/css/reset.css">
+        <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!-- Firebase Script -->
+        <script src="https://www.gstatic.com/firebasejs/4.8.2/firebase.js"></script>
+
+        <!-- Moment JS -->
+        <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+
+        <!-- jQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+<body>
+
+  <div id="stats-modal" class="modal fade text-center" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="truck-name" class="modal-title">Truck Name</h5>
+          <button id="x-btn" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body text-center">
+          <button id="upvote-btn" type="button" class="btn btn-success" markerID-data=""><i class="fa fa-thumbs-o-up" style="font-size:36px"></i>
+            <span id="num-of-upvotes"></span>
+          </button>
+          <button id="downvote-btn" type="button" class="btn btn-danger" markerID-data=""><i class="fa fa-thumbs-o-down" style="font-size:36px"></i>
+            <span id="num-of-downvotes"></span>
+          </button>
+        </div>
+
+        <div id="stats-footer" class="modal-footer d-block">
+          <div id="recent-activity">
+            Activity:
+            <span id="activity"></span>
+            <span id="activity-date"></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top"><i class="fa fa-cutlery" aria-hidden="true"></i></a>
+        <button class="navbar-toggler navbar-toggler-right text-white" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="true" aria-label="Toggle navigation">
+            <i class="fa fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Food Trucks</a>
+                </li>
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About Us</a>
+                </li>
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contact Us</a>
+                </li>
+            </ul>
+        </div>
+  </nav>
+
+<!-- Header -->
+<header class="masthead bg-primary text-white text-center">
+  <div class="container">
+    <h1 class="text-uppercase mb-0">Food Truckr</h1>
+    <img class="img-fluid" src="./assets/images/food.png" alt="logo">
+    <h2 class="font-weight-light mb-0">slogan</h2>
+  </div>
+</header>
+
+<!-- Portfolio Grid Section -->
+<section class="portfolio" id="portfolio">
+  <div class="container">
+    <h2 class="text-center text-uppercase text-secondary mb-0">Find Food Trucks</h2>
+    <hr class="star-dark mb-5">
+
+    <div id="map"></div>
+
+    <div class= "buttons">
+      <div class= "text-center main-btn">
+        <button id="pin-truck-btn" type="button" class="btn btn-primary col-md-3 text-center" data-toggle="modal" data-target="#exampleModal">Pin a Food Truck</button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Name of Truck</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body text-center">
+                <form class="form-inline my-2 my-lg-0">
+                  <input id="search-term" class="form-control mr-sm-2 text-center" id="search-term" type="search" placeholder="Search" aria-label="Search">
+                  <button id="truck-query" class="btn my-2 my-sm-0" type="submit">Submit</button>
+                </form>
+                <p id="noFoodTruckFound">Sorry, no food truck found with that name</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      <button id="near-me-btn" class="btn btn-primary col-md-3" type="submit" value="Input">Find a Food Truck Near Me</button>
+      <button class="btn btn-primary col-md-3 reset" type="submit" value="Input">Reset Map</button>
+
+    </div>
+    </div>
+
+<!-- thumbnails starts here -->
+
+    <div class="row">
+      <div class="col-md-6 col-lg-4 port">
+        <a class="portfolio-item d-block mx-auto box box1 shadow1" href="#portfolio-modal-5">
+
+          <div class="container inlay">
+            <div class="centered">Name</div>
+          </div>
+
+          <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+            <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+              <i class="fa fa-search-plus fa-3x"></i>
+            </div>
+          </div>
+
+          <img class="img-fluid images" id="truck-1-thumbnail" src="" alt="food-truck-image">
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4 port">
+        <a class="portfolio-item d-block mx-auto box box1 shadow1" href="#portfolio-modal-5">
+
+          <div class="container inlay">
+            <div class="centered">Name</div>
+          </div>
+
+          <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+            <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+              <i class="fa fa-search-plus fa-3x"></i>
+            </div>
+          </div>
+
+          <img class="img-fluid images" id="truck-2-thumbnail" src="" alt="food-truck-image">
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4 port">
+        <a class="portfolio-item d-block mx-auto box box1 shadow1" href="#portfolio-modal-5">
+
+          <div class="container inlay">
+            <div class="centered">Name</div>
+          </div>
+
+          <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+            <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+              <i class="fa fa-search-plus fa-3x"></i>
+            </div>
+          </div>
+
+          <img class="img-fluid images" id="truck-3-thumbnail" src="" alt="food-truck-image">
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4 port">
+        <a class="portfolio-item d-block mx-auto box box1 shadow1" href="#portfolio-modal-5">
+
+          <div class="container inlay">
+            <div class="centered">Name</div>
+          </div>
+
+          <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+            <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+              <i class="fa fa-search-plus fa-3x"></i>
+            </div>
+          </div>
+
+          <img class="img-fluid images" id="truck-4-thumbnail" src="" alt="food-truck-image">
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4 port">
+        <a class="portfolio-item d-block mx-auto box box1 shadow1" href="#portfolio-modal-5">
+
+          <div class="container inlay">
+            <div class="centered">Name</div>
+          </div>
+
+          <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
+            <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+              <i class="fa fa-search-plus fa-3x"></i>
+            </div>
+          </div>
+
+          <img class="img-fluid images" id="truck-5-thumbnail" src="" alt="food-truck-image">
+        </a>
+      </div>
+
+      <div class="col-md-6 col-lg-4 port">
+        <a class="portfolio-item d-block mx-auto box box1 shadow1" href="#portfolio-modal-6">
+
+          <div class="container inlay">
+            <div class="centered">Name</div>
+          </div>
+
+          <div class="portfolio-item-caption d-flex position-absolute h-100 w-100 ">
+            <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
+              <i class="fa fa-search-plus fa-3x"></i>
+            </div>
+          </div>
+
+          <img class="img-fluid images" id="truck-6-thumbnail" src="" alt="food-truck-image">
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- About Section -->
+    <section class="bg-primary text-white mb-0" id="about">
+      <div class="container">
+        <h2 class="text-center text-uppercase text-white">About Us</h2>
+        <hr class="star-light mb-5">
+        <div class="row">
+          <div class="col-lg-4 ml-auto">
+            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique numquam, praesentium tenetur. Ab sapiente nobis quod ipsum, magni aperiam molestias dolorum ipsam minus, autem voluptas, obcaecati excepturi in laudantium sunt!</p>
+          </div>
+          <div class="col-lg-4 mr-auto">
+            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores similique eos, ipsa fugit placeat voluptates incidunt sed aliquam odit enim impedit laboriosam, veritatis, ad quia hic aperiam nam corporis! Fuga!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+      <div class="container">
+        <h2 class="text-center text-uppercase text-secondary mb-0">Contact Us</h2>
+        <hr class="star-dark mb-5">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+
+            <form name="sentMessage" id="contactForm" novalidate="novalidate">
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                  <label>Name</label>
+                  <input class="form-control" id="name" type="text" placeholder="Name" required="required" data-validation-required-message="Please enter your name.">
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                  <label>Email Address</label>
+                  <input class="form-control" id="email" type="email" placeholder="Email Address" required="required" data-validation-required-message="Please enter your email address.">
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                  <label>Phone Number</label>
+                  <input class="form-control" id="phone" type="tel" placeholder="Phone Number" required="required" data-validation-required-message="Please enter your phone number.">
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                  <label>Message</label>
+                  <textarea class="form-control" id="message" rows="5" placeholder="Message" required="required" data-validation-required-message="Please enter a message."></textarea>
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              <br>
+              <div id="success"></div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-xl" id="sendMessageButton">Send</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer text-center">
+      <div class="container text-center">
+        <div class="row">
+          <div class="col-md-12">
+            <h4 class="text-uppercase mb-4">Location</h4>
+            <p class="lead mb-0">1111 Testing Drive
+              <br>Denver, CO 80204</p>
+              <br><br>
+            <h5 class="mb-0"> Copyright &copy; Food Truckr 2018</h5>
+          </div>
+
+        </div>
+      </div>
+    </footer>
+
+    <div class="copyright py-4 text-center text-white">
+      <div class="container">
+        <small></small>
+      </div>
+    </div>
+
+    <!-- Portfolio Modal 1 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-1">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center foodinfo">
+          <div class="row innerblok">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0" id="truck-1-name"></h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" id="truck-1-image" src="./assets/images/mana.jpg" alt="mana" width="200" height="40">
+              <p class="mb-5"></p>
+              <div class="hours-div"></div>
+              <div class="review-div" id="truck-1-reviews"></div>
+              <div class="rating-div" id="truck-1-rating"></div>
+            </div>
+            <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+              <i class="fa fa-close"></i>
+              Go Back</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Portfolio Modal 2 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-2">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center foodinfo">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0" id="truck-2-name"></h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" id="truck-2-image" src="./assets/images/fred.jpg" alt="fred" width="200" height="40">
+
+              <p class="mb-5"></p>
+              <div class="review-div"></div>
+              <div class="review-div" id="truck-2-reviews"></div>
+              <div class="rating-div" id="truck-2-rating"></div>
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                <i class="fa fa-close"></i>
+                Go Back</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Portfolio Modal 3 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-3">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0" id="truck-3-name"></h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" id="truck-3-image" src="./assets/images/cluck.jpg" width="200" height="40" alt="cluck">
+
+              <p class="mb-5"></p>
+              <div class="hours-div"></div>
+              <div class="review-div"></div>
+              <div class="review-div" id="truck-3-reviews"></div>
+              <div class="rating-div" id="truck-3-rating"></div>
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                <i class="fa fa-close"></i>
+                Go Back</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Portfolio Modal 4 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-4">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0" id="truck-4-name"></h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" id="truck-4-image" src="./assets/images/wong.jpg"width="200" height="40"alt="wong">
+
+              <p class="mb-5"></p>
+              <div class="hours-div"></div>
+              <div class="review-div"></div>
+              <div class="review-div" id="truck-4-reviews"></div>
+              <div class="rating-div" id="truck-4-rating"></div>
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                <i class="fa fa-close"></i>
+                Go Back</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Portfolio Modal 5 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-5">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0" id="truck-5-name"></h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" id="truck-5-image" src="./assets/images/chiva.jpg" width="200" height="40"alt="chiva">
+
+              <p class="mb-5"></p>
+              <div class="hours-div"></div>
+              <div class="review-div"></div>
+              <div class="review-div" id="truck-5-reviews"></div>
+              <div class="rating-div" id="truck-5-rating"></div>
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                <i class="fa fa-close"></i>
+                Go Back</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Portfolio Modal 6 -->
+    <div class="portfolio-modal mfp-hide" id="portfolio-modal-6">
+      <div class="portfolio-modal-dialog bg-white">
+        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
+          <i class="fa fa-3x fa-times"></i>
+        </a>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <h2 class="text-secondary text-uppercase mb-0" id="truck-6-name"></h2>
+              <hr class="star-dark mb-5">
+              <img class="img-fluid mb-5" id="truck-6-image" src="./assets/images/pavy.jpg"width="200" height="40" alt="pavy">
+
+              <p class="mb-5"></p>
+              <div class="hours-div"></div>
+              <div class="review-div"></div>
+              <div class="review-div" id="truck-6-reviews"></div>
+              <div class="rating-div" id="truck-6-rating"></div>
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+                <i class="fa fa-close"></i>
+                Go Back</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
+    <div class="scroll-to-top d-lg-none position-fixed ">
+      <a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top">
+        <i class="fa fa-chevron-up"></i>
+      </a>
+    </div>
+
+
+<script type="text/javascript" src="./assets/javascript/ajax.js">
+
+</script>
+
+<!-- Current Holder for Auth JS (Test) -->
+
+<!-- bootstrap CDN -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+
+<script async defer src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
+
+<!-- Google Maps-->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHhZm7Y29u2ffWMapHvBNPM1PbpXJDO5k&callback=initMap"></script>
+
+<!-- Map Functions JavaScript -->
+<script src="./assets/javascript/maplogic.js"></script>
+
+</body>
+
+</html>
