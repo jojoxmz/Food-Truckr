@@ -1,8 +1,4 @@
 // Creating our ajax call for yelp API
-
-
-
-
 const client_id = 'UBoDtdxOKSgJELPqsAtwag';
 const client_secret = 'DluMc4r2kSvoSRdksiaNDNqkXiA9fFJKRPPWFruza63FtNGeRJrYaqCIN3StcVNZ';
 const corsHeroku = 'https://cors-anywhere.herokuapp.com/';
