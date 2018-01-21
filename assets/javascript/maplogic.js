@@ -31,22 +31,6 @@ var locationsObj = {};
 var markerArr = [];
 var initialDisplaySet = false;
 var currentLocation = {};
-var time = new Date().getTime();
-
-//Automatically refrehsing page following a period of idleness -
-//used to force update of geolocation
-$(document.body).bind("mousemove keypress touchstart", function(e) {
-    time = new Date().getTime();
-});
-
-function refresh() {
-  if(new Date().getTime() - time >= 120000) {
-    window.location.reload(true);
-  } else {
-    setTimeout(refresh, 20000);
-  }
-}
-setTimeout(refresh, 20000);
 
 //Class that will store marker-related data, instances to be passed to firebase
  class MarkerDataObj {
@@ -79,11 +63,6 @@ setTimeout(refresh, 20000);
    $("#stats-modal").modal("show");
  }
 
- //Called  on initial page load and on when any child modified. For initial page load,
- //iterate over child nodes (data related to individual markers), create initial markers
- //for display with embedded data, and pin those markers to map. The data in the markers
- //will be used to generate and populate the stats-modals on a click event. Add reference to the markers
- //in global associative array to manipulate or remove markers
  markersRef.on('value', function(snapshot) {
 
   if (initialDisplaySet == false) {
@@ -128,20 +107,6 @@ function initMap() {
     zoom: 12,
     center: denverCenter
   });
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      currentLocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-      console.log(currentLocation);
-    }, function() {
-      handleLocationError(true, infoWindow, map.getCenter());
-    });
-  } else {
-    handleLocationError(false, infoWindow, map.getCenter());
-  }
 }
 
 $(".reset").on("click",function() {
@@ -150,6 +115,28 @@ $(".reset").on("click",function() {
      zoom: 12
    });
 })
+
+var getUserCurrentLocationWithPromise = function(result) {
+  var infoWindow = new google.maps.InfoWindow;
+  var deferred = new $.Deferred();
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var position = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      deferred.resolve(position);
+    }, function() {
+      handleLocationError(true, infoWindow, map.getCenter());
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+  return deferred.promise();
+}
+
 
 //Drops pin at current user location and zooms - *****NEED TO IMPLEMENT*******
 function displayNearbyTrucks() {
@@ -245,7 +232,7 @@ function dismissModalForPinDrop() {
     $(".truckQuery").modal("hide");
     $("#search-term").val("");
     $("#search-term").removeAttr("disabled");
-  }, 500)
+  }, 3000)
 }
 
 $("#truck-query").on("click", function(event) {
@@ -259,7 +246,9 @@ $("#truck-query").on("click", function(event) {
 
 function dropNewTruckPin(searchTerm, truckID) {
 
-    var newMarkerData = new MarkerDataObj(currentLocation.lat, currentLocation.lng, searchTerm, truckID);
+    getUserCurrentLocationWithPromise().then(function(position) {
+
+    var newMarkerData = new MarkerDataObj(position.lat, position.lng, searchTerm, truckID);
     var newKey = markersRef.push().key;
     newMarkerData.markerID = newKey;
 
@@ -293,6 +282,7 @@ function dropNewTruckPin(searchTerm, truckID) {
     updates['/markers/' + newKey] = newMarkerData;
     updates['/trucks/' + newMarkerData.truckID + '/' + newKey] = newMarkerData;
     database.ref().update(updates);
+  });
 }
 
 $("#upvote-btn, #downvote-btn").on("click", function() {
