@@ -317,8 +317,6 @@ color: white;
   font-size: 40px;
 }
 
-
-
 /*Mary's CSS start*/
 
 /*.box{
@@ -376,4 +374,14 @@ mb-5{
 
 #noFoodTruckFound {
   display: none;
+}
+
+.dropdown-item:hover {
+  cursor: pointer;
+}
+
+#dropdownMenu2:active,
+#dropdownMenu2:focus {
+  background-color: #18BC9C;
+  border-color: #18BC9C;
 }

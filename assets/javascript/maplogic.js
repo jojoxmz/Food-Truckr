@@ -31,6 +31,8 @@ var locationsObj = {};
 var markerArr = [];
 var initialDisplaySet = false;
 var currentLocation = {};
+var locationInfoWindow = null;
+var locationRadiusCircle = null;
 
 //Class that will store marker-related data, instances to be passed to firebase
  class MarkerDataObj {
@@ -109,11 +111,24 @@ function initMap() {
   });
 }
 
+function resetLocationWindowAndCircle() {
+  if(locationInfoWindow != null) {
+    locationInfoWindow.close();
+    locationInfoWindow = null;
+  }
+
+  if(locationRadiusCircle != null) {
+    locationRadiusCircle.setMap(null);
+    locationRadiusCircle = null;
+  }
+}
+
 $(".reset").on("click",function() {
   map.setOptions({
      center: denverCenter,
      zoom: 12
    });
+   resetLocationWindowAndCircle();
 })
 
 var getUserCurrentLocationWithPromise = function(result) {
@@ -137,29 +152,50 @@ var getUserCurrentLocationWithPromise = function(result) {
   return deferred.promise();
 }
 
-//Drops pin at current user location and zooms - *****NEED TO IMPLEMENT*******
-function displayNearbyTrucks() {
-  var infoWindow = new google.maps.InfoWindow;
+function displayNearbyTrucks(radius) {
+  infoWindowError = new google.maps.InfoWindow;
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-      position.coords.latitude
       var pos = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
 
-      map.setCenter(pos);
-      var marker = new google.maps.Marker({
-        position: pos,
-        map: map
+    console.log(pos);
+
+    locationRadiusCircle = new google.maps.Circle({
+        strokeColor: '#18BC9C',
+        strokeOpacity: 0.7,
+        strokeWeight: 2,
+        fillColor: '#18BC9C',
+        fillOpacity: 0.25,
+        map: map,
+        center: pos,
+        radius: (parseFloat(radius) * 1609)
       });
+
+      map.setCenter(pos);
+      map.fitBounds(locationRadiusCircle.getBounds());
+
+      locationInfoWindow = new google.maps.InfoWindow({
+        content: "YOU ARE HERE",
+        position: pos
+      });
+
+      locationInfoWindow.open(map);
     }, function() {
-      handleLocationError(true, infoWindow, map.getCenter());
+      handleLocationError(true, infoWindowError, map.getCenter());
     });
   } else {
-    handleLocationError(false, infoWindow, map.getCenter());
+    handleLocationError(false, infoWindowError, map.getCenter());
   }
 }
+
+$(".dropdown-item").on("click", function() {
+  resetLocationWindowAndCircle();
+  var radius = $(this).attr("data-number");
+  displayNearbyTrucks(radius);
+});
 
 function testSearchTerm(searchTerm) {
   const client_id = 'UBoDtdxOKSgJELPqsAtwag';
