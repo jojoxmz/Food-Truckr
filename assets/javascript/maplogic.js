@@ -34,11 +34,12 @@ var currentLocation = {};
 
 //Class that will store marker-related data, instances to be passed to firebase
  class MarkerDataObj {
-   constructor(lat, lng, truckName) {
+   constructor(lat, lng, truckName, truckID) {
      this.markerID = "";
      this.lat = lat;
      this.lng = lng;
      this.truckName = truckName;
+     this.truckID = truckID;
      this.upvotes = 0;
      this.downvotes = 0;
      this.recentActivity = "Pinned";
@@ -65,8 +66,8 @@ var currentLocation = {};
  //Called  on initial page load and on when any child modified. For initial page load,
  //iterate over child nodes (data related to individual markers), create initial markers
  //for display with embedded data, and pin those markers to map. The data in the markers
- //will be used to generate populate the stats-modals on a click event. Addinf reference to the markers
- //in array to manipulate or remove markers
+ //will be used to generate and populate the stats-modals on a click event. Add reference to the markers
+ //in global associative array to manipulate or remove markers
  markersRef.on('value', function(snapshot) {
 
   if (initialDisplaySet == false) {
@@ -76,17 +77,17 @@ var currentLocation = {};
       var lat = childNodes.val().lat;
       var lng = childNodes.val().lng;
       var truckName = childNodes.val().truckName;
+      var truckID = childNodes.val().truckID;
       var upvotes = childNodes.val().upvotes;
       var downvotes = childNodes.val().downvotes;
       var recentActivity = childNodes.val().recentActivity;
       var recentActivityTime = childNodes.val().recentActivityTime;
 
-      console.log("Time: " + recentActivityTime);
-
       var marker = new google.maps.Marker({
         position: {lat: lat, lng: lng},
         map: map,
         title: truckName,
+        truckID: truckID,
         markerID: markerID,
         upvotes: upvotes,
         downvotes: downvotes,
@@ -106,12 +107,10 @@ var currentLocation = {};
     initialDisplaySet = true;
 });
 
-//This is called when Google maps API done loading. Add any fuctionality here we want triggered at that point.
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: denverCenter
-
   });
 }
 
@@ -122,14 +121,7 @@ $(".reset").on("click",function() {
    });
 })
 
-/*Center map on user's current location within a predetermined radius (possibly drop pin at user's current)
-location*/
 function displayNearbyTrucks() {
-
-}
-
-/*Call this fxn on modal btn click event*/
-function verifyTruckLocation() {
 
 }
 
@@ -203,12 +195,7 @@ function testSearchTerm(searchTerm) {
       })
       .then(response =>  response.json())
       .then(response => {
-        console.log(searchTerm);
-        console.log(response);
 
-
-      console.log(response.businesses.length)
-      console.log(response.businesses[1])
       if(response.businesses.length == 0) {
          $("#noFoodTruckFound").show();
          $("#search-term").val("");
@@ -216,7 +203,7 @@ function testSearchTerm(searchTerm) {
        } else if (response.businesses.length > 0) {
          for(var i = 0; i < response.businesses.length; i++) {
            if((response.businesses[i].name).toUpperCase().replace(regEx, '') == searchTerm.toUpperCase().replace(regEx, '')) {
-             dropNewTruckPin(searchTerm);
+             dropNewTruckPin((response.businesses[i].name), (response.businesses[i].id));
            } else {
              $("#noFoodTruckFound").show();
              $("#search-term").val("");
@@ -233,21 +220,19 @@ $("#truck-query").on("click", function(event) {
   testSearchTerm(searchTerm);
 });
 
-function dropNewTruckPin(searchTerm) {
+function dropNewTruckPin(searchTerm, truckID) {
     getUserCurrentLocationWithPromise().then(function(position) {
 
-    var newMarkerData = new MarkerDataObj(position.lat, position.lng, searchTerm);
+    var newMarkerData = new MarkerDataObj(position.lat, position.lng, searchTerm, truckID);
     var newKey = markersRef.push().key;
     newMarkerData.markerID = newKey;
-    console.log(newKey);
-    console.log(newMarkerData);
-    //ADD: Truck ID to MarkerData Object if possible with YELP API call
 
     //New marker dropped with custom data to be stored in and updated with firebase
     var marker = new google.maps.Marker({
       position: {lat: newMarkerData.lat, lng: newMarkerData.lng},
       map: map,
       title: newMarkerData.truckName,
+      truckID: newMarkerData.truckID,
       markerID: newMarkerData.markerID,
       upvotes: newMarkerData.upvotes,
       downvotes: newMarkerData.downvotes,
@@ -259,21 +244,19 @@ function dropNewTruckPin(searchTerm) {
     map.panTo(marker.position);
     console.log(marker.markerID);
 
-    //Push new marker
+    //Push new marker to associative array
     markerArr.push(marker);
 
     //Enclosing reference to marker
     function attachNewClickEvent(marker) {
       google.maps.event.addListener(marker, "click", setModalDisplay)
     }
-
     attachNewClickEvent(marker);
-    console.log("Array length: " +  markerArr.length);
 
     //Push new marker to firebase
     var updates = {};
     updates['/markers/' + newKey] = newMarkerData;
-    updates['/trucks/' + newMarkerData.truckName + '/' + newKey] = newMarkerData;
+    updates['/trucks/' + newMarkerData.truckID + '/' + newKey] = newMarkerData;
     database.ref().update(updates);
   });
 }
@@ -282,7 +265,6 @@ $("#upvote-btn, #downvote-btn").on("click", function() {
    if($(this).attr("id") == "upvote-btn") {
      var currentUpVotes = parseInt($("#num-of-upvotes").text());
      var markerID = $(this).attr("markerID-data");
-     console.log("Array length: " + markerArr.length);
 
      currentUpVotes++;
      updateFbUpVoteCount(currentUpVotes, markerID);
@@ -293,8 +275,6 @@ $("#upvote-btn, #downvote-btn").on("click", function() {
   } else if ($(this).attr("id") == "downvote-btn") {
      var currentDownVotes = parseInt($("#num-of-downvotes").text());
      var markerID = $(this).attr("markerID-data");
-     console.log(currentDownVotes);
-     console.log(markerID);
 
      currentDownVotes++;
      updateFbDownVoteCount(currentDownVotes, markerID)
@@ -306,6 +286,7 @@ function updateFbUpVoteCount(currentUpVotes, markerID) {
 
     if(markerArr[i].markerID == markerID) {
       var truckName = markerArr[i].title;
+      var truckID = markerArr[i].truckID;
       console.log(truckName);
 
       //$("#stat-modal").modal("hide");
@@ -318,7 +299,7 @@ function updateFbUpVoteCount(currentUpVotes, markerID) {
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
       })
 
-      trucksRef.child(truckName).child(markerID).update({
+      trucksRef.child(truckID).child(markerID).update({
         upvotes: currentUpVotes,
         recentActivity: "Location upvoted",
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
@@ -332,6 +313,7 @@ function updateFbDownVoteCount(currentDownVotes, markerID) {
 
     if(markerArr[i].markerID == markerID) {
       var truckName = markerArr[i].title;
+      var truckID = markerArr[i].truckID;
       console.log(truckName);
 
       markersRef.child(markerID).update({
@@ -340,7 +322,7 @@ function updateFbDownVoteCount(currentDownVotes, markerID) {
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
       })
 
-      trucksRef.child(truckName).child(markerID).update({
+      trucksRef.child(truckID).child(markerID).update({
         downvotes: currentDownVotes,
         recentActivity: "Location downvoted",
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
@@ -368,6 +350,7 @@ markersRef.on("child_added", function(snap) {
         position: {lat: snap.val().lat, lng: snap.val().lng},
         map: map,
         title: snap.val().truckName,
+        truckID: snap.val().truckID,
         markerID: snap.val().markerID,
         upvotes: snap.val().upvotes,
         downvotes: snap.val().downvotes,
