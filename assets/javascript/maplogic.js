@@ -137,7 +137,6 @@ var getUserCurrentLocationWithPromise = function(result) {
   return deferred.promise();
 }
 
-
 //Drops pin at current user location and zooms - *****NEED TO IMPLEMENT*******
 function displayNearbyTrucks() {
   var infoWindow = new google.maps.InfoWindow;
