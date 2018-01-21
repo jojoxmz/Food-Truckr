@@ -197,25 +197,57 @@ function testSearchTerm(searchTerm) {
       .then(response => {
 
       if(response.businesses.length == 0) {
-         $("#noFoodTruckFound").show();
-         $("#search-term").val("");
-         return false;
+        renderNoFoodTruckFoundDisplay();
        } else if (response.businesses.length > 0) {
+         var foodTruckFound = false;
          for(var i = 0; i < response.businesses.length; i++) {
            if((response.businesses[i].name).toUpperCase().replace(regEx, '') == searchTerm.toUpperCase().replace(regEx, '')) {
              dropNewTruckPin((response.businesses[i].name), (response.businesses[i].id));
-           } else {
-             $("#noFoodTruckFound").show();
-             $("#search-term").val("");
+             dismissModalForPinDrop();
+             foodTruckFound = true;
            }
-         }
+        }
+        if(foodTruckFound == false) {
+          renderNoFoodTruckFoundDisplay();
+        }
        }
      });
    });
  }
 
+$("#search-term").on("input", toggleBtnDisplay);
+
+function toggleBtnDisplay() {
+  if ($(this).val().trim() != "") {
+    $("#truck-query").removeAttr("disabled");
+  } else {
+    $("#truck-query").attr("disabled", "disabled");
+  }
+}
+
+function renderNoFoodTruckFoundDisplay() {
+  $("#noFoodTruckFound").show();
+  $("#search-term").val("");
+  $("#search-term").removeAttr("disabled");
+}
+
+$("#search-term").on("focus", function() {
+  $("#noFoodTruckFound").hide();
+});
+
+function dismissModalForPinDrop() {
+  setTimeout(function() {
+    $(".truckQuery").modal("hide");
+    $("#search-term").val("");
+    $("#search-term").removeAttr("disabled");
+  }, 3000)
+}
+
 $("#truck-query").on("click", function(event) {
   event.preventDefault();
+  $("#noFoodTruckFound").hide();
+  $("#truck-query, #search-term").attr("disabled", "disabled");
+
   var searchTerm = $("#search-term").val().trim();
   testSearchTerm(searchTerm);
 });

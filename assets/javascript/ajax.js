@@ -114,7 +114,7 @@ truckIdArray.forEach(function(truckId, i) {
 displayTruckReviews();
 
 
-/*$("#truck-query").on("click", function() {
+$("#truck-query").on("click", function() {
   event.preventDefault();
 
   var searchTerm = $("#search-term").val().trim();
@@ -142,4 +142,4 @@ displayTruckReviews();
 
     });
   });
-});*/
+});

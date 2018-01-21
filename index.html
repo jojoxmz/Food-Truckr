@@ -94,11 +94,11 @@
         <button id="pin-truck-btn" type="button" class="btn btn-primary col-md-3 text-center" data-toggle="modal" data-target="#exampleModal">Pin a Food Truck</button>
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade truckQuery" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Name of Truck</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Truck at Your Location:</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -106,9 +106,9 @@
               <div class="modal-body text-center">
                 <form class="form-inline my-2 my-lg-0">
                   <input id="search-term" class="form-control mr-sm-2 text-center" id="search-term" type="search" placeholder="Search" aria-label="Search">
-                  <button id="truck-query" class="btn my-2 my-sm-0" type="submit">Submit</button>
+                  <button id="truck-query" class="btn my-2 my-sm-0" type="submit" disabled>Submit</button>
                 </form>
-                <p id="noFoodTruckFound">Sorry, no food truck found with that name</p>
+                <p id="noFoodTruckFound" class="mt-3">No food truck found with that name - try again!</p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
