@@ -50,19 +50,20 @@ var locationRadiusCircle = null;
  }
 
  function convertTimestamp(timestamp) {
-   var newDate = moment(timestamp).format("DD MMM YYYY hh:mm:ss a");
+   var newDate = moment(timestamp).format();
+   console.log(newDate);
    return moment(newDate).fromNow();
  }
 
- function setModalDisplay() {
-   $("#truck-name").text(this.title);
-   $("#num-of-upvotes").text(this.upvotes);
-   $("#num-of-downvotes").text(this.downvotes);
-   $("#activity").text(this.recentActivity);
-   $("#activity-date").text(convertTimestamp(this.recentActivityTime));
-   $("#upvote-btn").attr("markerID-data", this.markerID);
-   $("#downvote-btn").attr("markerID-data", this.markerID);
-   $("#stats-modal").modal("show");
+function setModalDisplay() {
+  $("#truck-name").text(this.title);
+  $("#num-of-upvotes").text(this.upvotes);
+  $("#num-of-downvotes").text(this.downvotes);
+  $("#activity").text(this.recentActivity);
+  $("#activity-date").text(convertTimestamp(this.recentActivityTime));
+  $("#upvote-btn").attr("markerID-data", this.markerID);
+  $("#downvote-btn").attr("markerID-data", this.markerID);
+  $("#stats-modal").modal("show");
  }
 
  markersRef.on('value', function(snapshot) {
@@ -160,8 +161,6 @@ function displayNearbyTrucks(radius) {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
-
-    console.log(pos);
 
     locationRadiusCircle = new google.maps.Circle({
         strokeColor: '#18BC9C',

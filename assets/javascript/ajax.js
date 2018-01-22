@@ -40,6 +40,7 @@ function displayTruckInfo(){
         $(`#truck-${i+1}-rating`).text("Rating " + sortedRatings[i].rating);
         i++
       }
+
 console.log(response.businesses)
 console.log(sortedRatings)
       // var truck1Thumbnail = $("#truck-1-thumbnail").attr("src", response.businesses[0].image_url);
@@ -77,7 +78,7 @@ console.log(sortedRatings)
   });
 };
 
-//displayTruckInfo();
+displayTruckInfo();
 
 var truckIdArray = ["east-coast-joes-denver", "the-gyros-king-food-truck-denver", "stella-blue-food-truck-denver", "rocky-mountain-slices-denver", "ba-nom-a-nom-denver", "flex-able-food-trucks-denver"];
 
@@ -111,10 +112,9 @@ truckIdArray.forEach(function(truckId, i) {
   });
 }
 
-//displayTruckReviews();
+displayTruckReviews();
 
-
-/*$("#truck-query").on("click", function() {
+$("#truck-query").on("click", function() {
   event.preventDefault();
 
   var searchTerm = $("#search-term").val().trim();
@@ -142,4 +142,4 @@ truckIdArray.forEach(function(truckId, i) {
 
     });
   });
-});*/
+});
