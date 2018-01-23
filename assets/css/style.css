@@ -410,3 +410,7 @@ background-color: lightgrey;
   text-shadow: 0 0 5px red;
   display: none;
 }
+
+.hidden-divs {
+  display: none;
+}
