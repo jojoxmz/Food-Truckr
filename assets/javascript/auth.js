@@ -1,4 +1,4 @@
-var config = {
+/*var config = {
   apiKey: "AIzaSyBjhon0-cIYtELUMFxUT0isynUMCxaNp9Y",
   authDomain: "food-truckr.firebaseapp.com",
   databaseURL: "https://food-truckr.firebaseio.com",

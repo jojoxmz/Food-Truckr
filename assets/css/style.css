@@ -434,3 +434,8 @@ mb-5{
   text-align: center;
   color:  #2C3E50;
 }
+
+#removal-msg {
+  color: red;
+  text-shadow: 0 0 5px red;
+}
