@@ -33,16 +33,27 @@ function displayTruckInfo(){
       console.log('hopefully sorted array', sortedRatings);
 
       let i = 0;
-      while (i <= 6) {
-        $(`#truck-${i+1}-thumbnail`).attr("src", sortedRatings[i].image_url);
-        $(`#truck-${i+1}-name`).text(sortedRatings[i].name);
-        $(`#truck-${i+1}-image`).attr("src", sortedRatings[i].image_url);
-        $(`#truck-${i+1}-rating`).text("Rating " + sortedRatings[i].rating);
+
+      while (i < 6) {
+        $(`#truck-${i + 1}-thumbnail`).attr("src", sortedRatings[i].image_url);
+        $(`#truck-${i + 1}-name`).text(sortedRatings[i].name);
+        $(`#truck-${i +1}-image`).attr("src", sortedRatings[i].image_url);
+        $(`#truck-${i+1}-rating`).text("Rating: " + sortedRatings[i].rating);
+        $(`#truck-${i + 1}-phone`).text("Phone number: " + sortedRatings[i].phone);
+        $(`#truck-${i + 1}-hours`).text("Hours: " + sortedRatings[i].is_closed);
         $(`#thumb-truck-${i+1}-name`).text(sortedRatings[i].name);
+        if(sortedRatings[i].is_closed === true || sortedRatings[i].is_closed === false){
+        $(".hours-div").text("No hours of operation information is available. Please call phone number below");
+        }
         i++
       }
+
       console.log(response.businesses);
       console.log(sortedRatings);
+
+console.log(response.businesses)
+console.log(sortedRatings)
+
 
     });
   });
@@ -71,13 +82,25 @@ function displayTruckReviews() {
         }
       })
       .then(response =>  response.json())
-      .then(response => {
-        console.log(response);
+      // .then(response => {
+      //   console.log(response);
+
+        .then(response => {
+                console.log('what is our response', response);
 
 
-        var truckReview = $("#truck-" + (i+1) + "-reviews").text("Reviews: " + response.reviews[0].text + '<br>' + response.reviews[1].text)
 
-      });
+                var truckReview = $("#truck-" + (i+1) + "-reviews").html("Reviews: " + response.reviews.length);
+                response.reviews.forEach(function(review, j) {
+                  console.log(review)
+                  truckReview.append("<br />" + review.text + "<hr />");
+                })
+                console.log('what is truck review', truckReview)
+
+              });
+        // + '<br>' + response.reviews[2].text);
+      // });
+
     });
   });
 }

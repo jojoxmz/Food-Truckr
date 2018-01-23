@@ -319,35 +319,50 @@ color: white;
 
 /*Mary's CSS start*/
 
-/*.box{
-  width:60%;
-  height:200px;
+.box{
+  /*width:60%;*/
+  height:375px;
   float:left;
-  background-color: purple;
+  background-color: #2C3E50;
   border-radius:5px;
   display: inline-block;
+  margin: 20px;
+  border-style: solid;
+  border-width: 5px;
 }
 
-.shadow1{
-  box-shadow:0 1px 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.4) inset;
-position: relative;
+#truck-1-name, #truck-2-name, #truck-3-name, #truck-4-name, #truck-5-name, #truck-6-name{
+font-size: 25px;
+   border: 5px solid #292929;
+   outline: 5px solid #e3e3e3;
+   margin: 5px;
+   padding: 5px;
+
 }
 
-.mfp-hide{
-  background-color: purple;
-}
-
-.innerblok, .mx-auto, .bg-white{
+.portfolio-modal-dialog{
 background-color: lightgrey;
 }
 
-mb-5{
-  text-align: center;
+.rating-div, .review-div, .hours-div, .phone-div {
+  font-family: 'lato';
+  padding: 5px;
+  margin:10px;
+  width: 650px;
+  border-style: solid;
+  border-width: 3px;
+  border-color: lightgrey;
+  text-align: left;
+
 }
 
-.hours-div, .review-div{
-  font-family: 'Montserrat';
-  padding: 20px;
+
+
+
+
+/*.shadow1{
+  box-shadow:0 1px 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.4) inset;
+position: relative;
 }
 
 .inlay{
