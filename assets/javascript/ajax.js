@@ -5,7 +5,7 @@ const corsHeroku = 'https://cors-anywhere.herokuapp.com/';
 
 function displayTruckInfo(){
 
-  fetch(`${corsHeroku}https://api.yelp.com/oauth2/token?client_id=${client_id}&client_secret=${client_secret}`, {
+ fetch(`${corsHeroku}https://api.yelp.com/oauth2/token?client_id=${client_id}&client_secret=${client_secret}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -26,15 +26,15 @@ function displayTruckInfo(){
       console.log(response);
 
 
-      const sortedRatings = _.sortBy(response.businesses, function(business) {
+     const sortedRatings = _.sortBy(response.businesses, function(business) {
         return - business.rating;
       });
 
-      console.log('hopefully sorted array', sortedRatings);
+     console.log('hopefully sorted array', sortedRatings);
 
-      let i = 0;
+     let i = 0;
 
-      while (i < 6) {
+     while (i < 6) {
         $(`#truck-${i + 1}-thumbnail`).attr("src", sortedRatings[i].image_url);
         $(`#truck-${i + 1}-name`).text(sortedRatings[i].name);
         $(`#truck-${i +1}-image`).attr("src", sortedRatings[i].image_url);
@@ -48,10 +48,10 @@ function displayTruckInfo(){
         i++
       }
 
-      console.log(response.businesses)
+     console.log(response.businesses)
       console.log(sortedRatings)
 
-    });
+   });
   });
 };
 
@@ -79,12 +79,10 @@ function displayTruckReviews() {
       })
       .then(response =>  response.json())
 
-      .then(response => {
+     .then(response => {
         console.log('what is our response', response);
 
-
-
-        var truckReview = $("#truck-" + (i+1) + "-reviews").html("Reviews: " + response.reviews.length);
+       var truckReview = $("#truck-" + (i+1) + "-reviews").html("Reviews: " + response.reviews.length);
         response.reviews.forEach(function(review, j) {
           console.log(review)
           truckReview.append("<br />" + review.text + "<hr />");
