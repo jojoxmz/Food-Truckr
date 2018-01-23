@@ -16,6 +16,9 @@ var connectionsRef = database.ref("/connections");
 var connectedRef = database.ref(".info/connected");
 var markersRef = firebase.database().ref("markers");
 var trucksRef = firebase.database().ref("trucks");
+var inactiveMarkersRef = firebase.database().ref("inactiveMarkers");
+var inactiveTruckDataRef = firebase.database().ref("inactiveTruckData");
+
 
 connectedRef.on("value", function(snap) {
   if (snap.val()) {
@@ -46,6 +49,7 @@ var locationRadiusCircle = null;
      this.downvotes = 0;
      this.recentActivity = "Pinned";
      this.recentActivityTime = firebase.database.ServerValue.TIMESTAMP;
+     this.status = "active";
    }
  }
 
@@ -70,37 +74,40 @@ function setModalDisplay() {
   if (initialDisplaySet == false) {
     snapshot.forEach(function(childNodes) {
 
-      var markerID = (childNodes.key).toString();
-      var lat = childNodes.val().lat;
-      var lng = childNodes.val().lng;
-      var truckName = childNodes.val().truckName;
-      var truckID = childNodes.val().truckID;
-      var upvotes = childNodes.val().upvotes;
-      var downvotes = childNodes.val().downvotes;
-      var recentActivity = childNodes.val().recentActivity;
-      var recentActivityTime = childNodes.val().recentActivityTime;
 
-      var infowindow = new google.maps.InfoWindow;
-      var marker = new google.maps.Marker({
-        position: {lat: lat, lng: lng},
-        map: map,
-        title: truckName,
-        truckID: truckID,
-        markerID: markerID,
-        upvotes: upvotes,
-        downvotes: downvotes,
-        recentActivity: recentActivity,
-        recentActivityTime: recentActivityTime
-      });
+      if(childNodes.val().status == "active") {
 
-      markerArr.push(marker);
+        var markerID = (childNodes.key).toString();
+        var lat = childNodes.val().lat;
+        var lng = childNodes.val().lng;
+        var truckName = childNodes.val().truckName;
+        var truckID = childNodes.val().truckID;
+        var upvotes = childNodes.val().upvotes;
+        var downvotes = childNodes.val().downvotes;
+        var recentActivity = childNodes.val().recentActivity;
+        var recentActivityTime = childNodes.val().recentActivityTime;
 
-      //Enclosing reference to marker
-      function attachClickEvent(marker) {
-        google.maps.event.addListener(marker, "click", setModalDisplay);
+        var infowindow = new google.maps.InfoWindow;
+        var marker = new google.maps.Marker({
+          position: {lat: lat, lng: lng},
+          map: map,
+          title: truckName,
+          truckID: truckID,
+          markerID: markerID,
+          upvotes: upvotes,
+          downvotes: downvotes,
+          recentActivity: recentActivity,
+          recentActivityTime: recentActivityTime
+        });
+
+        markerArr.push(marker);
+
+        //Enclosing reference to marker
+        function attachClickEvent(marker) {
+          google.maps.event.addListener(marker, "click", setModalDisplay);
+        }
+        attachClickEvent(marker);
       }
-      attachClickEvent(marker);
-
     });
   }
     initialDisplaySet = true;
@@ -322,7 +329,8 @@ function dropNewTruckPin(searchTerm, truckID) {
 
     var updates = {};
     updates['/markers/' + newKey] = newMarkerData;
-    updates['/trucks/' + newMarkerData.truckID + '/' + newKey] = newMarkerData;
+    updates['/trucks/' + newMarkerData.truckID + '/markers/' + newKey] = newMarkerData;
+    console.log(updates);
     database.ref().update(updates);
   });
 }
@@ -342,11 +350,7 @@ $("#upvote-btn, #downvote-btn").on("click", function() {
 
      currentDownVotes++;
 
-     if(currentDownVotes == 3) {
-       removeMarkerOnDownVote(markerID);
-     } else {
-       updateFbDownVoteCount(currentDownVotes, markerID);
-     }
+     updateFbDownVoteCount(currentDownVotes, markerID);
   }
 });
 
@@ -363,7 +367,7 @@ function updateFbUpVoteCount(currentUpVotes, markerID) {
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
       })
 
-      trucksRef.child(truckID).child(markerID).update({
+      trucksRef.child(truckID).child("markers").child(markerID).update({
         upvotes: currentUpVotes,
         recentActivity: "Location upvoted",
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
@@ -385,11 +389,22 @@ function updateFbDownVoteCount(currentDownVotes, markerID) {
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
       })
 
-      trucksRef.child(truckID).child(markerID).update({
+      trucksRef.child(truckID).child("markers").child(markerID).update({
         downvotes: currentDownVotes,
         recentActivity: "Location downvoted",
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
       });
+
+      if(currentDownVotes == 3) {
+        markersRef.child(markerID).update({
+          status: "inactive"
+        })
+
+        trucksRef.child(truckID).child("markers").child(markerID).update({
+          status: "inactive"
+        });
+      }
+
     }
   }
 }
@@ -409,7 +424,6 @@ function removeMarkerOnDownVote(markerID) {
 
 markersRef.on("child_added", function(snap) {
   if(initialDisplaySet == true) {
-    alert("child added called");
 
     var isCurrentPinner = false;
     for(var i = 0; i < markerArr.length; i++) {
@@ -447,54 +461,58 @@ markersRef.on("child_added", function(snap) {
 
 markersRef.on("child_changed", function(snap) {
    var markerID = snap.val().markerID;
+  
+   if(snap.val().status == "inactive") {
+     removeMarkerFromDisplayAndSetModalAlert(markerID, snap);
+   } else {
+     for(var i = 0; i < markerArr.length; i++) {
+       if(markerArr[i].markerID == markerID) {
+         markerArr[i].upvotes = snap.val().upvotes;
+         markerArr[i].downvotes = snap.val().downvotes;
+         markerArr[i].recentActivity = snap.val().recentActivity;
+         markerArr[i].recentActivityTime = snap.val().recentActivityTime;
+      }
+    }
 
-   for(var i = 0; i < markerArr.length; i++) {
-     if(markerArr[i].markerID == markerID) {
-       markerArr[i].upvotes = snap.val().upvotes;
-       markerArr[i].downvotes = snap.val().downvotes;
-       markerArr[i].recentActivity = snap.val().recentActivity;
-       markerArr[i].recentActivityTime = snap.val().recentActivityTime;
-     }
-   }
-
-   console.log(($("#stats-modal").data('bs.modal') || {})._isShown)
    if(($("#upvote-btn").attr("markerID-data") == markerID) && ($("#stats-modal").data('bs.modal') || {})._isShown) {
      $("#num-of-upvotes").text(snap.val().upvotes);
      $("#num-of-downvotes").text(snap.val().downvotes);
      $("#activity").text(snap.val().recentActivity);
      $("#activity-date").text(convertTimestamp(snap.val().recentActivityTime));
    }
+ }
 });
 
-markersRef.on("child_removed", function(snap) {
-   var markerID = snap.val().markerID;
-   console.log("Marker array right before child removed: " + markerArr);
-
-   for(var i = 0; i < markerArr.length; i++) {
-     if(markerArr[i].markerID == markerID) {
-        markerArr[i].setMap(null);
-        markerArr[i] = null;
-        console.log("Marker value in array when nullifying: " + markerArr[i]);
-        markerArr.splice(i, 1);
-        console.log("Marker value in array after splicing: " +  markerArr[i]);
-        console.log(markerArr);
-     }
-   }
-
-   console.log("Marker array after removal and setting to null: " + markerArr);
-
-   console.log(($("#stats-modal").data('bs.modal') || {})._isShown)
-   if(($("#upvote-btn").attr("markerID-data") == markerID) && ($("#stats-modal").data('bs.modal') || {})._isShown) {
-      $("#upvote-btn, #downvote-btn").attr("disabled", "disabled");
-      $("#num-of-upvotes").text(snap.val().upvotes);
-      $("#num-of-downvotes").text(snap.val().downvotes);
-      $("#activity").text("Post ");
-      setTimeout(function() {
-        $("#stats-modal").modal("hide");
-        $("#upvote-btn, #downvote-btn").attr("disabled", "disabled");
-      }, 2000)
+function removeMarkerFromDisplayAndSetModalAlert(markerID, snap) {
+  for(var i = 0; i < markerArr.length; i++) {
+    if(markerArr[i].markerID == markerID) {
+      markerArr[i].setMap(null);
+      markerArr[i] = null;
+      markerArr.splice(i, 1);
     }
-});
+  }
+
+  if(($("#upvote-btn").attr("markerID-data") == markerID) && ($("#stats-modal").data('bs.modal') || {})._isShown) {
+    $("#upvote-btn, #downvote-btn").attr("disabled", "disabled");
+    $("#num-of-upvotes").text(snap.val().upvotes);
+    $("#num-of-downvotes").text(snap.val().downvotes);
+    $("#recent-activity").hide();
+    $("#activity, #activity-date").text("");
+
+    if(snap.val().downvotes == 3) {
+      $("#removal-msg").text("Removing pin due to significant downvotes.").show();
+    } else {
+      $("#removal-msg").text("Removing pin as stale.").show();
+    }
+
+    setTimeout(function() {
+     $("#stats-modal").modal("hide");
+     $("#removal-msg").hide();
+     $("#recent-activity").show();
+     $("#upvote-btn, #downvote-btn").removeAttr("disabled");
+   }, 5000)
+  }
+}
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.setPosition(pos);
