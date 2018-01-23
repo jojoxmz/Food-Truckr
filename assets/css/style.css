@@ -8,7 +8,9 @@ h4,
 h5,
 h6 {
 font-weight: 700;
-font-family: 'Montserrat'; }    
+font-family: 'Montserrat'; }
+
+
 hr.star-light,
 hr.star-dark {
 max-width: 15rem;
@@ -87,7 +89,8 @@ letter-spacing: 0.0625rem; }
 #mainNav .navbar-nav li.nav-item a.nav-link {
 color: #fff; }
 #mainNav .navbar-nav li.nav-item a.nav-link:hover {
-color: #18BC9C;    #mainNav .navbar-nav li.nav-item a.nav-link:active, #mainNav .navbar-nav li.nav-item a.nav-link:focus {
+color: #18BC9C; }
+#mainNav .navbar-nav li.nav-item a.nav-link:active, #mainNav .navbar-nav li.nav-item a.nav-link:focus {
 color: #fff; }
 #mainNav .navbar-nav li.nav-item a.nav-link.active {
 color: #18BC9C; }
@@ -237,15 +240,11 @@ border-top: 1px solid #e9ecef; }
 .footer {
 padding-top: 5rem;
 padding-bottom: 5rem;
-background-color: #1a252f;
+background-color: #2C3E50;
 color: #fff; }
 
-
-
-
-/*
 .copyright {
-background-color: #1a252f; }*/
+background-color: #1a252f; }
 
 a {
 color: #18BC9C; }
@@ -256,10 +255,10 @@ color: #128f76; }
 border-width: 2px; }
 
 .bg-primary {
-background-color: #2C3E55  !important; }
+background-color: slategrey !important; }
 
 .bg-secondary {
-background-color: #1a252f !important; }
+background-color: #2C3E50 !important; }
 
 .text-primary {
 color: #18BC9C !important; }
@@ -405,5 +404,3 @@ background-color: lightgrey;
   text-align: center;
   color:  #2C3E50;
 }
-
-

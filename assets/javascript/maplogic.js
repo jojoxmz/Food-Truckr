@@ -51,7 +51,6 @@ var locationRadiusCircle = null;
 
  function convertTimestamp(timestamp) {
    var newDate = moment(timestamp).format();
-   console.log(newDate);
    return moment(newDate).fromNow();
  }
 
@@ -81,6 +80,7 @@ function setModalDisplay() {
       var recentActivity = childNodes.val().recentActivity;
       var recentActivityTime = childNodes.val().recentActivityTime;
 
+      var infowindow = new google.maps.InfoWindow;
       var marker = new google.maps.Marker({
         position: {lat: lat, lng: lng},
         map: map,
@@ -96,10 +96,11 @@ function setModalDisplay() {
       markerArr.push(marker);
 
       //Enclosing reference to marker
-      function attachClickEvent() {
+      function attachClickEvent(marker) {
         google.maps.event.addListener(marker, "click", setModalDisplay);
       }
-       attachClickEvent(marker);
+      attachClickEvent(marker);
+
     });
   }
     initialDisplaySet = true;
@@ -110,6 +111,13 @@ function initMap() {
     zoom: 12,
     center: denverCenter
   });
+
+  google.maps.event.addListener(map, "click", function() {
+    if(locationRadiusCircle != null) {
+      locationRadiusCircle.setMap(null);
+      locationRadiusCircle = null;
+    }
+  })
 }
 
 function resetLocationWindowAndCircle() {
@@ -325,6 +333,7 @@ $("#upvote-btn, #downvote-btn").on("click", function() {
      var markerID = $(this).attr("markerID-data");
 
      currentUpVotes++;
+
      updateFbUpVoteCount(currentUpVotes, markerID);
 
   } else if ($(this).attr("id") == "downvote-btn") {
@@ -332,8 +341,13 @@ $("#upvote-btn, #downvote-btn").on("click", function() {
      var markerID = $(this).attr("markerID-data");
 
      currentDownVotes++;
-     updateFbDownVoteCount(currentDownVotes, markerID)
-    }
+
+     if(currentDownVotes == 3) {
+       removeMarkerOnDownVote(markerID);
+     } else {
+       updateFbDownVoteCount(currentDownVotes, markerID);
+     }
+  }
 });
 
 function updateFbUpVoteCount(currentUpVotes, markerID) {
@@ -342,7 +356,6 @@ function updateFbUpVoteCount(currentUpVotes, markerID) {
     if(markerArr[i].markerID == markerID) {
       var truckName = markerArr[i].title;
       var truckID = markerArr[i].truckID;
-      console.log(truckName);
 
       markersRef.child(markerID).update({
         upvotes: currentUpVotes,
@@ -365,7 +378,6 @@ function updateFbDownVoteCount(currentDownVotes, markerID) {
     if(markerArr[i].markerID == markerID) {
       var truckName = markerArr[i].title;
       var truckID = markerArr[i].truckID;
-      console.log(truckName);
 
       markersRef.child(markerID).update({
         downvotes: currentDownVotes,
@@ -382,14 +394,25 @@ function updateFbDownVoteCount(currentDownVotes, markerID) {
   }
 }
 
+function removeMarkerOnDownVote(markerID) {
+  for(i = 0; i < markerArr.length; i++) {
+
+    if(markerArr[i].markerID == markerID) {
+      var truckName = markerArr[i].title;
+      var truckID = markerArr[i].truckID;
+
+      markersRef.child(markerID).remove();
+      trucksRef.child(truckID).child(markerID).remove();
+    }
+  }
+}
+
 markersRef.on("child_added", function(snap) {
   if(initialDisplaySet == true) {
-  console.log("Array length: " +  markerArr.length);
+    alert("child added called");
 
     var isCurrentPinner = false;
     for(var i = 0; i < markerArr.length; i++) {
-      console.log(snap.val().markerID);
-      console.log(markerArr[i].markerID);
       if(markerArr[i].markerID == snap.val().markerID) {
         isCurrentPinner = true;
         markerArr[i].recentActivityTime = snap.val().recentActivityTime;
@@ -415,17 +438,15 @@ markersRef.on("child_added", function(snap) {
 
       attachClickEvent(marker);
       markerArr.push(marker);
-      console.log(markerArr);
-      console.log("Array length: " +  markerArr.length);
     }
+    console.log("Marker array on child added: " + markerArr);
+    console.log(markerArr);
+    console.log("Array length on child added: " +  markerArr.length);
   }
 });
 
 markersRef.on("child_changed", function(snap) {
    var markerID = snap.val().markerID;
-   console.log(snap.val());
-   console.log(snap.val().recentActivityTime);
-   console.log(convertTimestamp(snap.val().recentActivityTime));
 
    for(var i = 0; i < markerArr.length; i++) {
      if(markerArr[i].markerID == markerID) {
@@ -443,6 +464,36 @@ markersRef.on("child_changed", function(snap) {
      $("#activity").text(snap.val().recentActivity);
      $("#activity-date").text(convertTimestamp(snap.val().recentActivityTime));
    }
+});
+
+markersRef.on("child_removed", function(snap) {
+   var markerID = snap.val().markerID;
+   console.log("Marker array right before child removed: " + markerArr);
+
+   for(var i = 0; i < markerArr.length; i++) {
+     if(markerArr[i].markerID == markerID) {
+        markerArr[i].setMap(null);
+        markerArr[i] = null;
+        console.log("Marker value in array when nullifying: " + markerArr[i]);
+        markerArr.splice(i, 1);
+        console.log("Marker value in array after splicing: " +  markerArr[i]);
+        console.log(markerArr);
+     }
+   }
+
+   console.log("Marker array after removal and setting to null: " + markerArr);
+
+   console.log(($("#stats-modal").data('bs.modal') || {})._isShown)
+   if(($("#upvote-btn").attr("markerID-data") == markerID) && ($("#stats-modal").data('bs.modal') || {})._isShown) {
+      $("#upvote-btn, #downvote-btn").attr("disabled", "disabled");
+      $("#num-of-upvotes").text(snap.val().upvotes);
+      $("#num-of-downvotes").text(snap.val().downvotes);
+      $("#activity").text("Post ");
+      setTimeout(function() {
+        $("#stats-modal").modal("hide");
+        $("#upvote-btn, #downvote-btn").attr("disabled", "disabled");
+      }, 2000)
+    }
 });
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
