@@ -41,6 +41,7 @@ function displayTruckInfo(){
         $(`#truck-${i+1}-rating`).text("Rating: " + sortedRatings[i].rating);
         $(`#truck-${i + 1}-phone`).text("Phone number: " + sortedRatings[i].phone);
         $(`#truck-${i + 1}-hours`).text("Hours: " + sortedRatings[i].is_closed);
+        $(`#thumb-truck-${i+1}-name`).text(sortedRatings[i].name);
         if(sortedRatings[i].is_closed === true || sortedRatings[i].is_closed === false){
         $(".hours-div").text("No hours of operation information is available. Please call phone number below");
         }

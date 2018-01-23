@@ -10,15 +10,6 @@ h6 {
 font-weight: 700;
 font-family: 'Montserrat'; }
 
-.images{
-  max-width: 100%;
-}
-
-.port {
-  overflow: hidden;
-  height: 300px;
-}
-
 hr.star-light,
 hr.star-dark {
 max-width: 15rem;
@@ -248,11 +239,15 @@ border-top: 1px solid #e9ecef; }
 .footer {
 padding-top: 5rem;
 padding-bottom: 5rem;
-background-color: #2C3E50;
+background-color: #1a252f;
 color: #fff; }
 
+
+
+
+/*
 .copyright {
-background-color: #1a252f; }
+background-color: #1a252f; }*/
 
 a {
 color: #18BC9C; }
@@ -263,10 +258,10 @@ color: #128f76; }
 border-width: 2px; }
 
 .bg-primary {
-background-color: #18BC9C !important; }
+background-color: #2C3E55  !important; }
 
 .bg-secondary {
-background-color: #2C3E50 !important; }
+background-color: #1a252f !important; }
 
 .text-primary {
 color: #18BC9C !important; }
@@ -319,24 +314,12 @@ color: white;
 
 /*Mary's CSS start*/
 
-.box{
-  /*width:60%;*/
-  height:375px;
-  float:left;
-  background-color: #2C3E50;
-  border-radius:5px;
-  display: inline-block;
-  margin: 20px;
-  border-style: solid;
-  border-width: 5px;
-}
-
 #truck-1-name, #truck-2-name, #truck-3-name, #truck-4-name, #truck-5-name, #truck-6-name{
-font-size: 25px;
-   border: 5px solid #292929;
-   outline: 5px solid #e3e3e3;
-   margin: 5px;
-   padding: 5px;
+  font-size: 25px;
+  border: 5px solid #292929;
+  outline: 5px solid #e3e3e3;
+  margin: 5px;
+  padding: 5px;
 
 }
 
@@ -355,31 +338,6 @@ background-color: lightgrey;
   text-align: left;
 
 }
-
-
-
-
-
-/*.shadow1{
-  box-shadow:0 1px 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.4) inset;
-position: relative;
-}
-
-.inlay{
-    position: relative;
-    text-align: center;
-    color: darkgrey;
-    background-color: darkgrey;
-}
-
-.centered {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}*/
-
-/*Mary's CSS end*/
 
 /*Greg CSS*/
 
@@ -449,3 +407,5 @@ position: relative;
   text-align: center;
   color:  #2C3E50;
 }
+
+
