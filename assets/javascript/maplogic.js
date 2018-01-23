@@ -74,6 +74,7 @@ function setModalDisplay() {
   if (initialDisplaySet == false) {
     snapshot.forEach(function(childNodes) {
 
+
       if(childNodes.val().status == "active") {
 
         var markerID = (childNodes.key).toString();
@@ -408,6 +409,19 @@ function updateFbDownVoteCount(currentDownVotes, markerID) {
   }
 }
 
+function removeMarkerOnDownVote(markerID) {
+  for(i = 0; i < markerArr.length; i++) {
+
+    if(markerArr[i].markerID == markerID) {
+      var truckName = markerArr[i].title;
+      var truckID = markerArr[i].truckID;
+
+      markersRef.child(markerID).remove();
+      trucksRef.child(truckID).child(markerID).remove();
+    }
+  }
+}
+
 markersRef.on("child_added", function(snap) {
   if(initialDisplaySet == true) {
 
@@ -439,12 +453,15 @@ markersRef.on("child_added", function(snap) {
       attachClickEvent(marker);
       markerArr.push(marker);
     }
+    console.log("Marker array on child added: " + markerArr);
+    console.log(markerArr);
+    console.log("Array length on child added: " +  markerArr.length);
   }
 });
 
 markersRef.on("child_changed", function(snap) {
    var markerID = snap.val().markerID;
-
+  
    if(snap.val().status == "inactive") {
      removeMarkerFromDisplayAndSetModalAlert(markerID, snap);
    } else {

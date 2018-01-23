@@ -18,6 +18,9 @@
 
         <!-- jQuery -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <link href="https://fonts.googleapis.com/css?family=Lato|Montserrat" rel="stylesheet">
+
     </head>
 <body>
 
@@ -79,7 +82,7 @@
   <div class="container">
     <h1 class="text-uppercase mb-0">Food Truckr</h1>
     <img class="img-fluid" src="./assets/images/food.png" alt="logo">
-    <h2 class="font-weight-light mb-0">slogan</h2>
+    <h2 class="font-weight-light mb-0">Eat up you stupid pigs.</h2>
   </div>
 </header>
 
@@ -141,12 +144,13 @@
       <section id="top-truck-thumbnails" class="col-12">
         <div class="content-wrapper">
           <h2 id="top-trucks" class="text-center my-5">Top-Ranked Denver Food Trucks</h2>
+          <hr class="star-dark mb-5">
           <div class="row text-center">
             <div class="col-12 col-md-6 col-lg-4">
               <div class="thumb-holder mb-4">
                 <a href="#portfolio-modal-5" class="d-block w-100">
                   <img id="truck-1-thumbnail" class="img-fluid w-100 truck-thumb" src="" alt="food-truck-image">
-                  <div class="w-100 thumb-truck-name">Truck Name</div>
+                  <div class="w-100 thumb-truck-name" id="thumb-truck-1-name"></div>
                 </a>
               </div>
             </div>
@@ -154,7 +158,7 @@
               <div class="thumb-holder mb-4">
                 <a href="#portfolio-modal-5" class="d-block w-100">
                   <img id="truck-2-thumbnail" class="img-fluid w-100 truck-thumb" src="" alt="food-truck-image">
-                  <div class="w-100 thumb-truck-name">Truck Name</div>
+                  <div class="w-100 thumb-truck-name" id="thumb-truck-2-name"></div>
                 </a>
               </div>
             </div>
@@ -162,7 +166,7 @@
               <div class="thumb-holder mb-4">
                 <a href="#portfolio-modal-5" class="d-block mb-4 w-100">
                   <img id="truck-3-thumbnail" class="img-fluid w-100 truck-thumb" src="" alt="food-truck-image">
-                  <div class="w-100 thumb-truck-name">Truck Name</div>
+                  <div class="w-100 thumb-truck-name" id="thumb-truck-3-name"></div>
                 </a>
               </div>
             </div>
@@ -170,7 +174,7 @@
               <div class="thumb-holder mb-4">
                 <a href="#portfolio-modal-5" class="d-block mb-4 w-100">
                   <img id="truck-4-thumbnail" class="img-fluid w-100 truck-thumb" src="" alt="food-truck-image">
-                  <div class="w-100 thumb-truck-name">Truck Name</div>
+                  <div class="w-100 thumb-truck-name"id="thumb-truck-4-name"></div>
                 </a>
               </div>
             </div>
@@ -178,7 +182,7 @@
               <div class="thumb-holder mb-4">
                 <a href="#portfolio-modal-5" class="d-block w-100">
                   <img id="truck-5-thumbnail" class="img-fluid w-100 truck-thumb" src="" alt="food-truck-image">
-                  <div class="w-100 thumb-truck-name">Truck Name</div>
+                  <div class="w-100 thumb-truck-name"id="thumb-truck-5-name"></div>
                 </a>
               </div>
             </div>
@@ -186,7 +190,7 @@
               <div class="thumb-holder mb-4">
                 <a href="#portfolio-modal-5" class="d-block w-100">
                   <img id="truck-6-thumbnail" class="img-fluid w-100 truck-thumb" src="" alt="food-truck-image">
-                  <div class="w-100 thumb-truck-name">Truck Name</div>
+                  <div class="w-100 thumb-truck-name" id="thumb-truck-6-name"></div>
                 </a>
               </div>
             </div>
@@ -205,10 +209,11 @@
         <hr class="star-light mb-5">
         <div class="row">
           <div class="col-lg-4 ml-auto">
-            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique numquam, praesentium tenetur. Ab sapiente nobis quod ipsum, magni aperiam molestias dolorum ipsam minus, autem voluptas, obcaecati excepturi in laudantium sunt!</p>
+            <p class="lead">Our Mission: Food Truckr is Denver's up-and-coming web and mobile friendly food truck location service. Our team is dedicated to connecting and hungry city dwelers with their favorite mobilized dining spots.
+</p>
           </div>
           <div class="col-lg-4 mr-auto">
-            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores similique eos, ipsa fugit placeat voluptates incidunt sed aliquam odit enim impedit laboriosam, veritatis, ad quia hic aperiam nam corporis! Fuga!</p>
+            <p class="lead">With the help of our users, pin drops on our google map can show our community where there favorite food trucks have been spotted. Thanks to yelp, users can then get additional infomation on the food truck with our extensive database.
           </div>
         </div>
       </div>
@@ -222,44 +227,47 @@
         <div class="row">
           <div class="col-lg-8 mx-auto">
 
-            <form name="sentMessage" id="contactForm" novalidate="novalidate">
+            <form id="gform" class="pure-form pure-form-stacked" form action="mailto:codingpractices101@gmail.com" method="post" enctype="text/plain">
               <div class="control-group">
-                <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                  <label>Name</label>
+                <fieldset class="form-group floating-label-form-group controls mb-0 pb-2 pure-group">
+                  <label for="name">Name</label>
                   <input class="form-control" id="name" type="text" placeholder="Name" required="required" data-validation-required-message="Please enter your name.">
                   <p class="help-block text-danger"></p>
-                </div>
+                </fieldset>
               </div>
               <div class="control-group">
-                <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                  <label>Email Address</label>
-                  <input class="form-control" id="email" type="email" placeholder="Email Address" required="required" data-validation-required-message="Please enter your email address.">
-                  <p class="help-block text-danger"></p>
-                </div>
+                <fieldset class="form-group floating-label-form-group controls mb-0 pb-2 pure-group">
+                  <label for="email">Email Address</label>
+                  <input class="form-control" id="email" name="email" type="email" value="" required placeholder="johnsmith@gmail.com">
+                  <span id="email-invalid" style="display:none">
+                  Must be a valid email address</span>
+                </fieldset>
               </div>
               <div class="control-group">
-                <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                  <label>Phone Number</label>
+                <fieldset class="form-group floating-label-form-group controls mb-0 pb-2 pure-group">
+                  <label for="phone">Phone Number</label>
                   <input class="form-control" id="phone" type="tel" placeholder="Phone Number" required="required" data-validation-required-message="Please enter your phone number.">
                   <p class="help-block text-danger"></p>
-                </div>
+                </fieldset>
               </div>
               <div class="control-group">
-                <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                  <label>Message</label>
+                <fieldset class="form-group floating-label-form-group controls mb-0 pb-2 pure-group">
+                  <label for="message">Message</label>
                   <textarea class="form-control" id="message" rows="5" placeholder="Message" required="required" data-validation-required-message="Please enter a message."></textarea>
                   <p class="help-block text-danger"></p>
-                </div>
+                </fieldset>
               </div>
               <br>
               <div id="success"></div>
-              <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-xl" id="sendMessageButton">Send</button>
+                <button type="submit" class="btn btn-primary btn-xl pure-button" id="sendMessageButton">Send</button>
               </div>
+
             </form>
           </div>
         </div>
       </div>
+      
+
     </section>
 
     <!-- Footer -->
@@ -267,10 +275,6 @@
       <div class="container text-center">
         <div class="row">
           <div class="col-md-12">
-            <h4 class="text-uppercase mb-4">Location</h4>
-            <p class="lead mb-0">1111 Testing Drive
-              <br>Denver, CO 80204</p>
-              <br><br>
             <h5 class="mb-0"> Copyright &copy; Food Truckr 2018</h5>
           </div>
 
@@ -278,11 +282,11 @@
       </div>
     </footer>
 
-    <div class="copyright py-4 text-center text-white">
+    <!-- <div class="copyright py-4 text-center text-white">
       <div class="container">
-        <small></small>
+        <h5 class="mb-0"> Copyright &copy; Food Truckr 2018</h5>
       </div>
-    </div>
+    </div> -->
 
     <!-- Portfolio Modal 1 -->
     <div class="portfolio-modal mfp-hide" id="portfolio-modal-1">
@@ -297,10 +301,10 @@
               <hr class="star-dark mb-5">
               <img class="img-fluid mb-5" id="truck-1-image" src="./assets/images/mana.jpg" alt="mana" width="200" height="40">
               <p class="mb-5"></p>
-              <div class="hours-div"></div>
+              <div class="hours-div" id="truck-1-hours"></div>
+              <div class="phone-div" id="truck-1-phone"></div>
               <div class="review-div" id="truck-1-reviews"></div>
               <div class="rating-div" id="truck-1-rating"></div>
-            </div>
             <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
               <i class="fa fa-close"></i>
               Go Back</a>
@@ -317,14 +321,15 @@
           <i class="fa fa-3x fa-times"></i>
         </a>
         <div class="container text-center foodinfo">
-          <div class="row">
+          <div class="row innerblok">
             <div class="col-lg-8 mx-auto">
               <h2 class="text-secondary text-uppercase mb-0" id="truck-2-name"></h2>
               <hr class="star-dark mb-5">
               <img class="img-fluid mb-5" id="truck-2-image" src="./assets/images/fred.jpg" alt="fred" width="200" height="40">
 
               <p class="mb-5"></p>
-              <div class="review-div"></div>
+            <div class="hours-div" id="truck-2-hours"></div>
+              <div class="phone-div" id="truck-2-phone"></div>
               <div class="review-div" id="truck-2-reviews"></div>
               <div class="rating-div" id="truck-2-rating"></div>
               <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
@@ -343,15 +348,15 @@
           <i class="fa fa-3x fa-times"></i>
         </a>
         <div class="container text-center">
-          <div class="row">
+          <div class="row innerblok">
             <div class="col-lg-8 mx-auto">
               <h2 class="text-secondary text-uppercase mb-0" id="truck-3-name"></h2>
               <hr class="star-dark mb-5">
               <img class="img-fluid mb-5" id="truck-3-image" src="./assets/images/cluck.jpg" width="200" height="40" alt="cluck">
 
               <p class="mb-5"></p>
-              <div class="hours-div"></div>
-              <div class="review-div"></div>
+              <div class="hours-div" id="truck-3-hours"></div>
+              <div class="phone-div" id="truck-3-phone"></div>
               <div class="review-div" id="truck-3-reviews"></div>
               <div class="rating-div" id="truck-3-rating"></div>
               <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
@@ -370,15 +375,15 @@
           <i class="fa fa-3x fa-times"></i>
         </a>
         <div class="container text-center">
-          <div class="row">
+          <div class="row innerblok">
             <div class="col-lg-8 mx-auto">
               <h2 class="text-secondary text-uppercase mb-0" id="truck-4-name"></h2>
               <hr class="star-dark mb-5">
               <img class="img-fluid mb-5" id="truck-4-image" src="./assets/images/wong.jpg"width="200" height="40"alt="wong">
 
               <p class="mb-5"></p>
-              <div class="hours-div"></div>
-              <div class="review-div"></div>
+              <div class="hours-div" id="truck-4-hours"></div>
+              <div class="phone-div" id="truck-4-phone"></div>
               <div class="review-div" id="truck-4-reviews"></div>
               <div class="rating-div" id="truck-4-rating"></div>
               <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
@@ -397,15 +402,15 @@
           <i class="fa fa-3x fa-times"></i>
         </a>
         <div class="container text-center">
-          <div class="row">
+          <div class="row innerblok">
             <div class="col-lg-8 mx-auto">
               <h2 class="text-secondary text-uppercase mb-0" id="truck-5-name"></h2>
               <hr class="star-dark mb-5">
               <img class="img-fluid mb-5" id="truck-5-image" src="./assets/images/chiva.jpg" width="200" height="40"alt="chiva">
 
               <p class="mb-5"></p>
-              <div class="hours-div"></div>
-              <div class="review-div"></div>
+              <div class="hours-div" id="truck-5-hours"></div>
+              <div class="phone-div" id="truck-5-phone"></div>
               <div class="review-div" id="truck-5-reviews"></div>
               <div class="rating-div" id="truck-5-rating"></div>
               <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
@@ -424,15 +429,15 @@
           <i class="fa fa-3x fa-times"></i>
         </a>
         <div class="container text-center">
-          <div class="row">
+          <div class="row innerblok">
             <div class="col-lg-8 mx-auto">
               <h2 class="text-secondary text-uppercase mb-0" id="truck-6-name"></h2>
               <hr class="star-dark mb-5">
               <img class="img-fluid mb-5" id="truck-6-image" src="./assets/images/pavy.jpg"width="200" height="40" alt="pavy">
 
               <p class="mb-5"></p>
-              <div class="hours-div"></div>
-              <div class="review-div"></div>
+              <div class="hours-div" id="truck-6-hours"></div>
+              <div class="phone-div" id="truck-6-phone"></div>
               <div class="review-div" id="truck-6-reviews"></div>
               <div class="rating-div" id="truck-6-rating"></div>
               <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
@@ -468,6 +473,13 @@
 
 <!-- Map Functions JavaScript -->
 <script src="./assets/javascript/maplogic.js"></script>
+
+<script src="./assets/javascript/jojo.js"></script>
+
+<!-- <script data-cfasync="false" type="text/javascript"
+src="https://cdn.rawgit.com/dwyl/html-form-send-email-via-google-script-without-server/master/form-submission-handler.js"></script> -->
+
+
 
 </body>
 

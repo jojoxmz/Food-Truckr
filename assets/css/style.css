@@ -10,14 +10,6 @@ h6 {
 font-weight: 700;
 font-family: 'Montserrat'; }
 
-.images{
-  max-width: 100%;
-}
-
-.port {
-  overflow: hidden;
-  height: 300px;
-}
 
 hr.star-light,
 hr.star-dark {
@@ -263,7 +255,7 @@ color: #128f76; }
 border-width: 2px; }
 
 .bg-primary {
-background-color: #18BC9C !important; }
+background-color: slategrey !important; }
 
 .bg-secondary {
 background-color: #2C3E50 !important; }
@@ -319,52 +311,30 @@ color: white;
 
 /*Mary's CSS start*/
 
-/*.box{
-  width:60%;
-  height:200px;
-  float:left;
-  background-color: purple;
-  border-radius:5px;
-  display: inline-block;
+#truck-1-name, #truck-2-name, #truck-3-name, #truck-4-name, #truck-5-name, #truck-6-name{
+  font-size: 25px;
+  border: 5px solid #292929;
+  outline: 5px solid #e3e3e3;
+  margin: 5px;
+  padding: 5px;
+
 }
 
-.shadow1{
-  box-shadow:0 1px 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.4) inset;
-position: relative;
-}
-
-.mfp-hide{
-  background-color: purple;
-}
-
-.innerblok, .mx-auto, .bg-white{
+.portfolio-modal-dialog{
 background-color: lightgrey;
 }
 
-mb-5{
-  text-align: center;
+.rating-div, .review-div, .hours-div, .phone-div {
+  font-family: 'lato';
+  padding: 5px;
+  margin:10px;
+  width: 650px;
+  border-style: solid;
+  border-width: 3px;
+  border-color: lightgrey;
+  text-align: left;
+
 }
-
-.hours-div, .review-div{
-  font-family: 'Montserrat';
-  padding: 20px;
-}
-
-.inlay{
-    position: relative;
-    text-align: center;
-    color: darkgrey;
-    background-color: darkgrey;
-}
-
-.centered {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}*/
-
-/*Mary's CSS end*/
 
 /*Greg CSS*/
 
