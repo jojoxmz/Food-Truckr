@@ -37,13 +37,19 @@ function displayTruckInfo(){
       console.log('hoopefully sorted array', sortedRatings);
 
       let i = 0;
-      while (i <= 6) {
+      while (i < 6) {
         $(`#truck-${i + 1}-thumbnail`).attr("src", sortedRatings[i].image_url);
         $(`#truck-${i + 1}-name`).text(sortedRatings[i].name);
         $(`#truck-${i +1}-image`).attr("src", sortedRatings[i].image_url);
-        $(`#truck-${i+1}-rating`).text("Rating " + sortedRatings[i].rating);
+        $(`#truck-${i+1}-rating`).text("Rating: " + sortedRatings[i].rating);
+        $(`#truck-${i + 1}-phone`).text("Phone number: " + sortedRatings[i].phone);
+        $(`#truck-${i + 1}-hours`).text("Hours: " + sortedRatings[i].is_closed);
+        if(sortedRatings[i].is_closed === true || sortedRatings[i].is_closed === false){
+        $(".hours-div").text("No hours of operation information is available. Please call phone number below");
+        }
         i++
       }
+
 console.log(response.businesses)
 console.log(sortedRatings)
       // var truck1Thumbnail = $("#truck-1-thumbnail").attr("src", response.businesses[0].image_url);
@@ -108,7 +114,8 @@ truckIdArray.forEach(function(truckId, i) {
         console.log(response);
 
 
-        var truckReview = $("#truck-" + (i+1) + "-reviews").text("Reviews: " + response.reviews[0].text + '<br>' + response.reviews[1].text)
+        var truckReview = $("#truck-" + (i+1) + "-reviews").html("Reviews: " + response.reviews.length + '<br>' + response.reviews[1].text);
+        console.log('what is truck review', truckReview)
         // + '<br>' + response.reviews[2].text);
       });
     });
