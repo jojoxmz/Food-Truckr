@@ -49,6 +49,7 @@ var locationRadiusCircle = null;
      this.downvotes = 0;
      this.recentActivity = "Pinned";
      this.recentActivityTime = firebase.database.ServerValue.TIMESTAMP;
+     this.status = "active";
    }
  }
 
@@ -73,37 +74,39 @@ function setModalDisplay() {
   if (initialDisplaySet == false) {
     snapshot.forEach(function(childNodes) {
 
-      var markerID = (childNodes.key).toString();
-      var lat = childNodes.val().lat;
-      var lng = childNodes.val().lng;
-      var truckName = childNodes.val().truckName;
-      var truckID = childNodes.val().truckID;
-      var upvotes = childNodes.val().upvotes;
-      var downvotes = childNodes.val().downvotes;
-      var recentActivity = childNodes.val().recentActivity;
-      var recentActivityTime = childNodes.val().recentActivityTime;
+      if(childNodes.val().status == "active") {
 
-      var infowindow = new google.maps.InfoWindow;
-      var marker = new google.maps.Marker({
-        position: {lat: lat, lng: lng},
-        map: map,
-        title: truckName,
-        truckID: truckID,
-        markerID: markerID,
-        upvotes: upvotes,
-        downvotes: downvotes,
-        recentActivity: recentActivity,
-        recentActivityTime: recentActivityTime
-      });
+        var markerID = (childNodes.key).toString();
+        var lat = childNodes.val().lat;
+        var lng = childNodes.val().lng;
+        var truckName = childNodes.val().truckName;
+        var truckID = childNodes.val().truckID;
+        var upvotes = childNodes.val().upvotes;
+        var downvotes = childNodes.val().downvotes;
+        var recentActivity = childNodes.val().recentActivity;
+        var recentActivityTime = childNodes.val().recentActivityTime;
 
-      markerArr.push(marker);
+        var infowindow = new google.maps.InfoWindow;
+        var marker = new google.maps.Marker({
+          position: {lat: lat, lng: lng},
+          map: map,
+          title: truckName,
+          truckID: truckID,
+          markerID: markerID,
+          upvotes: upvotes,
+          downvotes: downvotes,
+          recentActivity: recentActivity,
+          recentActivityTime: recentActivityTime
+        });
 
-      //Enclosing reference to marker
-      function attachClickEvent(marker) {
-        google.maps.event.addListener(marker, "click", setModalDisplay);
+        markerArr.push(marker);
+
+        //Enclosing reference to marker
+        function attachClickEvent(marker) {
+          google.maps.event.addListener(marker, "click", setModalDisplay);
+        }
+        attachClickEvent(marker);
       }
-      attachClickEvent(marker);
-
     });
   }
     initialDisplaySet = true;
@@ -326,6 +329,7 @@ function dropNewTruckPin(searchTerm, truckID) {
     var updates = {};
     updates['/markers/' + newKey] = newMarkerData;
     updates['/trucks/' + newMarkerData.truckID + '/markers/' + newKey] = newMarkerData;
+    console.log(updates);
     database.ref().update(updates);
   });
 }
@@ -389,26 +393,23 @@ function updateFbDownVoteCount(currentDownVotes, markerID) {
         recentActivity: "Location downvoted",
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
       });
-    }
-  }
-}
 
-function removeMarkerOnDownVote(markerID) {
-  for(i = 0; i < markerArr.length; i++) {
+      if(currentDownVotes == 3) {
+        markersRef.child(markerID).update({
+          status: "inactive"
+        })
 
-    if(markerArr[i].markerID == markerID) {
-      var truckName = markerArr[i].title;
-      var truckID = markerArr[i].truckID;
+        trucksRef.child(truckID).child("markers").child(markerID).update({
+          status: "inactive"
+        });
+      }
 
-      markersRef.child(markerID).remove();
-      trucksRef.child(truckID).child("markers").child(markerID).remove();
     }
   }
 }
 
 markersRef.on("child_added", function(snap) {
   if(initialDisplaySet == true) {
-    alert("child added called");
 
     var isCurrentPinner = false;
     for(var i = 0; i < markerArr.length; i++) {
@@ -444,8 +445,8 @@ markersRef.on("child_added", function(snap) {
 markersRef.on("child_changed", function(snap) {
    var markerID = snap.val().markerID;
 
-   if(snap.val().downvotes == 3) {
-     removeMarkerOnDownVote(markerID);
+   if(snap.val().status == "inactive") {
+     removeMarkerFromDisplayAndSetModalAlert(markerID, snap);
    } else {
      for(var i = 0; i < markerArr.length; i++) {
        if(markerArr[i].markerID == markerID) {
@@ -465,34 +466,12 @@ markersRef.on("child_changed", function(snap) {
  }
 });
 
-trucksRef.child("markers").on("child_changed", function(snap) {
-  var markerID = snap.val().markerID;
-  if(snap.val().downvotes == 3) {
-    removeMarkerOnDownVote(markerID);
-  }
-});
-
-markersRef.on("child_removed", function(snap) {
-   var markerID = snap.val().markerID;
-   inactiveMarkersRef.update({
-     [markerID]: snap.val()
-   });
-   removeMarkerFromDisplayAndSetModalAlert(markerID, snap);
-});
-
-trucksRef.child("markers").on("child_removed", function(snap) {
-  var markerID = snap.val().markerID;
-  inactiveTruckDataRef.update({
-    [markerID]: snap.val()
-  });
-});
-
 function removeMarkerFromDisplayAndSetModalAlert(markerID, snap) {
   for(var i = 0; i < markerArr.length; i++) {
     if(markerArr[i].markerID == markerID) {
-       markerArr[i].setMap(null);
-       markerArr[i] = null;
-       markerArr.splice(i, 1);
+      markerArr[i].setMap(null);
+      markerArr[i] = null;
+      markerArr.splice(i, 1);
     }
   }
 
@@ -501,11 +480,12 @@ function removeMarkerFromDisplayAndSetModalAlert(markerID, snap) {
     $("#num-of-upvotes").text(snap.val().upvotes);
     $("#num-of-downvotes").text(snap.val().downvotes);
     $("#recent-activity").hide();
+    $("#activity, #activity-date").text("");
 
     if(snap.val().downvotes == 3) {
-      $("#removal-msg").text("Removing pin due to significant downvotes.");
+      $("#removal-msg").text("Removing pin due to significant downvotes.").show();
     } else {
-      $("#removal-msg").text("Removing pin as stale.");
+      $("#removal-msg").text("Removing pin as stale.").show();
     }
 
     setTimeout(function() {
