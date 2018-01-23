@@ -110,14 +110,23 @@ truckIdArray.forEach(function(truckId, i) {
         }
       })
       .then(response =>  response.json())
-      .then(response => {
-        console.log(response);
+      // .then(response => {
+      //   console.log(response);
+
+        .then(response => {
+                console.log('what is our response', response);
 
 
-        var truckReview = $("#truck-" + (i+1) + "-reviews").html("Reviews: " + response.reviews.length + '<br>' + response.reviews[1].text);
-        console.log('what is truck review', truckReview)
+                var truckReview = $("#truck-" + (i+1) + "-reviews").html("Reviews: " + response.reviews.length);
+                response.reviews.forEach(function(review, j) {
+                  console.log(review)
+                  truckReview.append("<br />" + review.text + "<hr />");
+                })
+                console.log('what is truck review', truckReview)
+
+              });
         // + '<br>' + response.reviews[2].text);
-      });
+      // });
     });
   });
 }
