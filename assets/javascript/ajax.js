@@ -41,8 +41,9 @@ function displayTruckInfo(){
         $(`#thumb-truck-${i+1}-name`).text(sortedRatings[i].name);
         i++
       }
-      console.log(response.businesses)
-      console.log(sortedRatings)
+      console.log(response.businesses);
+      console.log(sortedRatings);
+
     });
   });
 };
