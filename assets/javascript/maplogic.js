@@ -31,14 +31,17 @@ var locationsObj = {};
 var markerArr = [];
 var initialDisplaySet = false;
 var currentLocation = {};
+var locationInfoWindow = null;
+var locationRadiusCircle = null;
 
 //Class that will store marker-related data, instances to be passed to firebase
  class MarkerDataObj {
-   constructor(lat, lng, truckName) {
+   constructor(lat, lng, truckName, truckID) {
      this.markerID = "";
      this.lat = lat;
      this.lng = lng;
      this.truckName = truckName;
+     this.truckID = truckID;
      this.upvotes = 0;
      this.downvotes = 0;
      this.recentActivity = "Pinned";
@@ -47,26 +50,22 @@ var currentLocation = {};
  }
 
  function convertTimestamp(timestamp) {
-   var newDate = moment(timestamp).format("DD MMM YYYY hh:mm:ss a");
+   var newDate = moment(timestamp).format();
+   console.log(newDate);
    return moment(newDate).fromNow();
  }
 
- function setModalDisplay() {
-   $("#truck-name").text(this.title);
-   $("#num-of-upvotes").text(this.upvotes);
-   $("#num-of-downvotes").text(this.downvotes);
-   $("#activity").text(this.recentActivity);
-   $("#activity-date").text(convertTimestamp(this.recentActivityTime));
-   $("#upvote-btn").attr("markerID-data", this.markerID);
-   $("#downvote-btn").attr("markerID-data", this.markerID);
-   $("#stats-modal").modal("show");
+function setModalDisplay() {
+  $("#truck-name").text(this.title);
+  $("#num-of-upvotes").text(this.upvotes);
+  $("#num-of-downvotes").text(this.downvotes);
+  $("#activity").text(this.recentActivity);
+  $("#activity-date").text(convertTimestamp(this.recentActivityTime));
+  $("#upvote-btn").attr("markerID-data", this.markerID);
+  $("#downvote-btn").attr("markerID-data", this.markerID);
+  $("#stats-modal").modal("show");
  }
 
- //Called  on initial page load and on when any child modified. For initial page load,
- //iterate over child nodes (data related to individual markers), create initial markers
- //for display with embedded data, and pin those markers to map. The data in the markers
- //will be used to generate populate the stats-modals on a click event. Addinf reference to the markers
- //in array to manipulate or remove markers
  markersRef.on('value', function(snapshot) {
 
   if (initialDisplaySet == false) {
@@ -76,17 +75,17 @@ var currentLocation = {};
       var lat = childNodes.val().lat;
       var lng = childNodes.val().lng;
       var truckName = childNodes.val().truckName;
+      var truckID = childNodes.val().truckID;
       var upvotes = childNodes.val().upvotes;
       var downvotes = childNodes.val().downvotes;
       var recentActivity = childNodes.val().recentActivity;
       var recentActivityTime = childNodes.val().recentActivityTime;
 
-      console.log("Time: " + recentActivityTime);
-
       var marker = new google.maps.Marker({
         position: {lat: lat, lng: lng},
         map: map,
         title: truckName,
+        truckID: truckID,
         markerID: markerID,
         upvotes: upvotes,
         downvotes: downvotes,
@@ -106,32 +105,32 @@ var currentLocation = {};
     initialDisplaySet = true;
 });
 
-//This is called when Google maps API done loading. Add any fuctionality here we want triggered at that point.
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: denverCenter
-
   });
+}
+
+function resetLocationWindowAndCircle() {
+  if(locationInfoWindow != null) {
+    locationInfoWindow.close();
+    locationInfoWindow = null;
+  }
+
+  if(locationRadiusCircle != null) {
+    locationRadiusCircle.setMap(null);
+    locationRadiusCircle = null;
+  }
 }
 
 $(".reset").on("click",function() {
   map.setOptions({
-       center: denverCenter,
-       zoom: 12
+     center: denverCenter,
+     zoom: 12
    });
+   resetLocationWindowAndCircle();
 })
-
-/*Center map on user's current location within a predetermined radius (possibly drop pin at user's current)
-location*/
-function displayNearbyTrucks() {
-
-}
-
-/*Call this fxn on modal btn click event*/
-function verifyTruckLocation() {
-
-}
 
 var getUserCurrentLocationWithPromise = function(result) {
   var infoWindow = new google.maps.InfoWindow;
@@ -154,29 +153,48 @@ var getUserCurrentLocationWithPromise = function(result) {
   return deferred.promise();
 }
 
-//Drops pin at current user location
-function dropPinAtUserCurrentLocationAndZoom() {
-  var infoWindow = new google.maps.InfoWindow;
+function displayNearbyTrucks(radius) {
+  infoWindowError = new google.maps.InfoWindow;
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-      position.coords.latitude
       var pos = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
 
-      map.setCenter(pos);
-      var marker = new google.maps.Marker({
-        position: pos,
-        map: map
+    locationRadiusCircle = new google.maps.Circle({
+        strokeColor: '#18BC9C',
+        strokeOpacity: 0.7,
+        strokeWeight: 2,
+        fillColor: '#18BC9C',
+        fillOpacity: 0.25,
+        map: map,
+        center: pos,
+        radius: (parseFloat(radius) * 1609)
       });
+
+      map.setCenter(pos);
+      map.fitBounds(locationRadiusCircle.getBounds());
+
+      locationInfoWindow = new google.maps.InfoWindow({
+        content: "YOU ARE HERE",
+        position: pos
+      });
+
+      locationInfoWindow.open(map);
     }, function() {
-      handleLocationError(true, infoWindow, map.getCenter());
+      handleLocationError(true, infoWindowError, map.getCenter());
     });
   } else {
-    handleLocationError(false, infoWindow, map.getCenter());
+    handleLocationError(false, infoWindowError, map.getCenter());
   }
 }
+
+$(".dropdown-item").on("click", function() {
+  resetLocationWindowAndCircle();
+  var radius = $(this).attr("data-number");
+  displayNearbyTrucks(radius);
+});
 
 function testSearchTerm(searchTerm) {
   const client_id = 'UBoDtdxOKSgJELPqsAtwag';
@@ -203,51 +221,77 @@ function testSearchTerm(searchTerm) {
       })
       .then(response =>  response.json())
       .then(response => {
-        console.log(searchTerm);
-        console.log(response);
 
-
-      console.log(response.businesses.length)
-      console.log(response.businesses[1])
       if(response.businesses.length == 0) {
-         $("#noFoodTruckFound").show();
-         $("#search-term").val("");
-         return false;
+        renderNoFoodTruckFoundDisplay();
        } else if (response.businesses.length > 0) {
+         var foodTruckFound = false;
          for(var i = 0; i < response.businesses.length; i++) {
            if((response.businesses[i].name).toUpperCase().replace(regEx, '') == searchTerm.toUpperCase().replace(regEx, '')) {
-             dropNewTruckPin(searchTerm);
-           } else {
-             $("#noFoodTruckFound").show();
-             $("#search-term").val("");
+             dropNewTruckPin((response.businesses[i].name), (response.businesses[i].id));
+             dismissModalForPinDrop();
+             foodTruckFound = true;
            }
-         }
+        }
+        if(foodTruckFound == false) {
+          renderNoFoodTruckFoundDisplay();
+        }
        }
      });
    });
  }
 
+$("#search-term").on("input", toggleBtnDisplay);
+
+function toggleBtnDisplay() {
+  if ($(this).val().trim() != "") {
+    $("#truck-query").removeAttr("disabled");
+  } else {
+    $("#truck-query").attr("disabled", "disabled");
+  }
+}
+
+function renderNoFoodTruckFoundDisplay() {
+  $("#noFoodTruckFound").show();
+  $("#search-term").val("");
+  $("#search-term").removeAttr("disabled");
+}
+
+$("#search-term").on("focus", function() {
+  $("#noFoodTruckFound").hide();
+});
+
+function dismissModalForPinDrop() {
+  setTimeout(function() {
+    $(".truckQuery").modal("hide");
+    $("#search-term").val("");
+    $("#search-term").removeAttr("disabled");
+  }, 3000)
+}
+
 $("#truck-query").on("click", function(event) {
   event.preventDefault();
+  $("#noFoodTruckFound").hide();
+  $("#truck-query, #search-term").attr("disabled", "disabled");
+
   var searchTerm = $("#search-term").val().trim();
   testSearchTerm(searchTerm);
 });
 
-function dropNewTruckPin(searchTerm) {
+function dropNewTruckPin(searchTerm, truckID) {
+
     getUserCurrentLocationWithPromise().then(function(position) {
 
-    var newMarkerData = new MarkerDataObj(position.lat, position.lng, searchTerm);
+    var newMarkerData = new MarkerDataObj(position.lat, position.lng, searchTerm, truckID);
     var newKey = markersRef.push().key;
     newMarkerData.markerID = newKey;
-    console.log(newKey);
-    console.log(newMarkerData);
-    //ADD: Truck ID to MarkerData Object if possible with YELP API call
 
     //New marker dropped with custom data to be stored in and updated with firebase
     var marker = new google.maps.Marker({
       position: {lat: newMarkerData.lat, lng: newMarkerData.lng},
       map: map,
       title: newMarkerData.truckName,
+      truckID: newMarkerData.truckID,
       markerID: newMarkerData.markerID,
       upvotes: newMarkerData.upvotes,
       downvotes: newMarkerData.downvotes,
@@ -257,9 +301,8 @@ function dropNewTruckPin(searchTerm) {
 
     map.setZoom(18);
     map.panTo(marker.position);
-    console.log(marker.markerID);
 
-    //Push new marker
+    //Push new marker to associative array
     markerArr.push(marker);
 
     //Enclosing reference to marker
@@ -268,12 +311,10 @@ function dropNewTruckPin(searchTerm) {
     }
 
     attachNewClickEvent(marker);
-    console.log("Array length: " +  markerArr.length);
 
-    //Push new marker to firebase
     var updates = {};
     updates['/markers/' + newKey] = newMarkerData;
-    updates['/trucks/' + newMarkerData.truckName + '/' + newKey] = newMarkerData;
+    updates['/trucks/' + newMarkerData.truckID + '/' + newKey] = newMarkerData;
     database.ref().update(updates);
   });
 }
@@ -282,19 +323,13 @@ $("#upvote-btn, #downvote-btn").on("click", function() {
    if($(this).attr("id") == "upvote-btn") {
      var currentUpVotes = parseInt($("#num-of-upvotes").text());
      var markerID = $(this).attr("markerID-data");
-     console.log("Array length: " + markerArr.length);
 
      currentUpVotes++;
      updateFbUpVoteCount(currentUpVotes, markerID);
-      /*$("#stat-modal").modal("hide");
-      $("#upvote-btn").attr("markerID-data", "");
-      $("#downvote-btn").attr("markerID-data", "");*/
 
   } else if ($(this).attr("id") == "downvote-btn") {
      var currentDownVotes = parseInt($("#num-of-downvotes").text());
      var markerID = $(this).attr("markerID-data");
-     console.log(currentDownVotes);
-     console.log(markerID);
 
      currentDownVotes++;
      updateFbDownVoteCount(currentDownVotes, markerID)
@@ -306,11 +341,8 @@ function updateFbUpVoteCount(currentUpVotes, markerID) {
 
     if(markerArr[i].markerID == markerID) {
       var truckName = markerArr[i].title;
+      var truckID = markerArr[i].truckID;
       console.log(truckName);
-
-      //$("#stat-modal").modal("hide");
-      //$("#upvote-btn").attr("markerID-data", "");
-      //$("#downvote-btn").attr("markerID-data", "");
 
       markersRef.child(markerID).update({
         upvotes: currentUpVotes,
@@ -318,7 +350,7 @@ function updateFbUpVoteCount(currentUpVotes, markerID) {
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
       })
 
-      trucksRef.child(truckName).child(markerID).update({
+      trucksRef.child(truckID).child(markerID).update({
         upvotes: currentUpVotes,
         recentActivity: "Location upvoted",
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
@@ -332,6 +364,7 @@ function updateFbDownVoteCount(currentDownVotes, markerID) {
 
     if(markerArr[i].markerID == markerID) {
       var truckName = markerArr[i].title;
+      var truckID = markerArr[i].truckID;
       console.log(truckName);
 
       markersRef.child(markerID).update({
@@ -340,7 +373,7 @@ function updateFbDownVoteCount(currentDownVotes, markerID) {
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
       })
 
-      trucksRef.child(truckName).child(markerID).update({
+      trucksRef.child(truckID).child(markerID).update({
         downvotes: currentDownVotes,
         recentActivity: "Location downvoted",
         recentActivityTime: firebase.database.ServerValue.TIMESTAMP
@@ -368,6 +401,7 @@ markersRef.on("child_added", function(snap) {
         position: {lat: snap.val().lat, lng: snap.val().lng},
         map: map,
         title: snap.val().truckName,
+        truckID: snap.val().truckID,
         markerID: snap.val().markerID,
         upvotes: snap.val().upvotes,
         downvotes: snap.val().downvotes,

@@ -317,8 +317,6 @@ color: white;
   font-size: 40px;
 }
 
-
-
 /*Mary's CSS start*/
 
 .box{
@@ -387,4 +385,67 @@ position: relative;
 
 #stats-footer {
   font-size: 1.2rem;
+}
+
+#noFoodTruckFound {
+  display: none;
+}
+
+.dropdown-item {
+  font-family: 'Lato';
+}
+
+.dropdown-menu {
+}
+
+.dropdown-item:hover {
+  cursor: pointer;
+}
+
+#dropdownMenu2:active,
+#dropdownMenu2:focus {
+  background-color: #18BC9C;
+  border-color: #18BC9C;
+}
+
+.truck-thumb {
+  min-height: 263px;
+}
+
+.thumb-holder {
+  max-height: 263px;
+  overflow: hidden;
+  position: relative;
+  padding-right: 0;
+  border-radius: 20px;
+}
+
+.thumb-holder img,
+.thumb-holder .thumb-truck-name {
+  transition: all 500ms ease;
+}
+
+.thumb-holder:hover img {
+  filter: brightness(40%);
+}
+
+.thumb-holder:hover .thumb-truck-name {
+  color: white;
+}
+
+.thumb-truck-name {
+  color: #ffffff;
+  padding: 4% 0;
+  position: absolute;
+  top: 40%;
+  width: 100%;
+  font-family: 'Montserrat';
+  font-size: 2.5rem;
+  color: transparent;
+  z-index: 2;
+}
+
+#top-trucks {
+  text-align: center;
+  color:  #2C3E50;
 }
