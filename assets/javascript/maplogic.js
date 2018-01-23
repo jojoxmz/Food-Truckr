@@ -461,7 +461,7 @@ markersRef.on("child_added", function(snap) {
 
 markersRef.on("child_changed", function(snap) {
    var markerID = snap.val().markerID;
-  
+
    if(snap.val().status == "inactive") {
      removeMarkerFromDisplayAndSetModalAlert(markerID, snap);
    } else {
