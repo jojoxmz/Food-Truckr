@@ -57,7 +57,7 @@ function displayTruckInfo(){
 
 displayTruckInfo();
 
-var truckIdArray = ["east-coast-joes-denver", "the-gyros-king-food-truck-denver", "stella-blue-food-truck-denver", "rocky-mountain-slices-denver", "ba-nom-a-nom-denver", "flex-able-food-trucks-denver"];
+var truckIdArray = ["the-gyros-king-food-truck-denver", "stella-blue-food-truck-denver", "batter-crepe-company-denver", "east-coast-joes-denver", "smokestack-70-denver", "flex-able-food-trucks-denver"];
 
 function displayTruckReviews() {
   truckIdArray.forEach(function(truckId, i) {
@@ -99,10 +99,21 @@ displayTruckReviews();
 
 var thumbnailArray = ["#thumbnail-1-link", "#thumbnail-2-link", "#thumbnail-3-link", "#thumbnail-4-link", "#thumbnail-5-link", "#thumbnail-6-link"];
 
+var cardArray = ["#portfolio-modal-1", "#portfolio-modal-2", "#portfolio-modal-3", "#portfolio-modal-4", "#portfolio-modal-5", "#portfolio-modal-6"]
+
+var resetHiddenDivs = function() {
+  $.each(cardArray, function(i){
+    $(cardArray[i]).addClass("hidden-divs");
+  });
+};
+
 $.each(thumbnailArray, function(i){
   $(thumbnailArray[i]).click( function(){
-    $(`#portfolio-modal-${i+1}`).show();
+    resetHiddenDivs();
+    if ($(`#portfolio-modal-${i+1}`).hasClass("hidden-divs")) {
+      $(`#portfolio-modal-${i+1}`).removeClass("hidden-divs");
+    } else {
+      $(`#portfolio-modal-${i+1}`).addClass("hidden-divs");
+    }
   });
-
-
 });
