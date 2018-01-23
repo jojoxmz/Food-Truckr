@@ -95,7 +95,7 @@ function displayTruckReviews() {
 
 displayTruckReviews();
 
-// Creating functionality for displaying and hiding top-6-cards when corresponding thumbnail is clicked
+// Creating functionality for displaying and hiding top-6 cards when corresponding thumbnail is clicked
 
 var thumbnailArray = ["#thumbnail-1-link", "#thumbnail-2-link", "#thumbnail-3-link", "#thumbnail-4-link", "#thumbnail-5-link", "#thumbnail-6-link"];
 
