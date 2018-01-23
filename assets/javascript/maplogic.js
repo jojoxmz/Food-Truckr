@@ -409,7 +409,7 @@ function removeMarkerOnDownVote(markerID) {
 
 markersRef.on("child_added", function(snap) {
   if(initialDisplaySet == true) {
-    alert("child added called");
+    // alert("child added called");
 
     var isCurrentPinner = false;
     for(var i = 0; i < markerArr.length; i++) {
