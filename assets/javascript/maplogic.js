@@ -47,6 +47,7 @@ var locationRadiusCircle = null;
      this.truckID = truckID;
      this.upvotes = 0;
      this.downvotes = 0;
+     this.pinTime = firebase.database.ServerValue.TIMESTAMP;
      this.recentActivity = "Pinned";
      this.recentActivityTime = firebase.database.ServerValue.TIMESTAMP;
      this.status = "active";
@@ -57,6 +58,17 @@ var locationRadiusCircle = null;
    var newDate = moment(timestamp).format();
    return moment(newDate).fromNow();
  }
+
+function isMarkerStale(timestamp) {
+  var newDate = moment(timestamp).format();
+  var differenceInMin = moment().diff(newDate, 'minutes', true);
+  console.log(differenceInMin);
+  if(differenceInMin > 1440) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 function setModalDisplay() {
   $("#truck-name").text(this.title);
@@ -74,39 +86,48 @@ function setModalDisplay() {
   if (initialDisplaySet == false) {
     snapshot.forEach(function(childNodes) {
 
+      console.log(isMarkerStale(childNodes.val().pinTime));
 
       if(childNodes.val().status == "active") {
 
-        var markerID = (childNodes.key).toString();
-        var lat = childNodes.val().lat;
-        var lng = childNodes.val().lng;
-        var truckName = childNodes.val().truckName;
-        var truckID = childNodes.val().truckID;
-        var upvotes = childNodes.val().upvotes;
-        var downvotes = childNodes.val().downvotes;
-        var recentActivity = childNodes.val().recentActivity;
-        var recentActivityTime = childNodes.val().recentActivityTime;
+        if(isMarkerStale(childNodes.val().pinTime)) {
+          childNodes.update({
+            status: "inactive"
+          })
+        } else {
+          var markerID = (childNodes.key).toString();
+          var lat = childNodes.val().lat;
+          var lng = childNodes.val().lng;
+          var truckName = childNodes.val().truckName;
+          var truckID = childNodes.val().truckID;
+          var upvotes = childNodes.val().upvotes;
+          var downvotes = childNodes.val().downvotes;
+          var recentActivity = childNodes.val().recentActivity;
+          var recentActivityTime = childNodes.val().recentActivityTime;
+          var pinTime = childNodes.val().pinTime;
 
-        var infowindow = new google.maps.InfoWindow;
-        var marker = new google.maps.Marker({
-          position: {lat: lat, lng: lng},
-          map: map,
-          title: truckName,
-          truckID: truckID,
-          markerID: markerID,
-          upvotes: upvotes,
-          downvotes: downvotes,
-          recentActivity: recentActivity,
-          recentActivityTime: recentActivityTime
-        });
+          var infowindow = new google.maps.InfoWindow;
+          var marker = new google.maps.Marker({
+            position: {lat: lat, lng: lng},
+            map: map,
+            title: truckName,
+            truckID: truckID,
+            markerID: markerID,
+            upvotes: upvotes,
+            downvotes: downvotes,
+            recentActivity: recentActivity,
+            recentActivityTime: recentActivityTime,
+            pinTime: pinTime
+          });
 
-        markerArr.push(marker);
+          markerArr.push(marker);
 
-        //Enclosing reference to marker
-        function attachClickEvent(marker) {
-          google.maps.event.addListener(marker, "click", setModalDisplay);
+          //Enclosing reference to marker
+          function attachClickEvent(marker) {
+            google.maps.event.addListener(marker, "click", setModalDisplay);
+          }
+          attachClickEvent(marker);
         }
-        attachClickEvent(marker);
       }
     });
   }
@@ -311,7 +332,8 @@ function dropNewTruckPin(searchTerm, truckID) {
       upvotes: newMarkerData.upvotes,
       downvotes: newMarkerData.downvotes,
       recentActivity: newMarkerData.recentActivity,
-      recentActivityTime: newMarkerData.recentActivityTime
+      recentActivityTime: newMarkerData.recentActivityTime,
+      pinTime: newMarkerData.pinTime
     });
 
     map.setZoom(18);
