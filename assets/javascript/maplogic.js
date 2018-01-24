@@ -36,6 +36,7 @@ var initialDisplaySet = false;
 var currentLocation = {};
 var locationInfoWindow = null;
 var locationRadiusCircle = null;
+var modalTimeout = null;
 
 //Class that will store marker-related data, instances to be passed to firebase
  class MarkerDataObj {
@@ -81,6 +82,14 @@ function setModalDisplay() {
   $("#stats-modal").modal("show");
  }
 
+ $("#stats-modal").on("hidden.bs.modal", function () {
+   $("#removal-msg").hide();
+   $("#recent-activity").show();
+   $("#upvote-btn, #downvote-btn").removeAttr("disabled");
+   $("#stats-modal-body").removeClass("box-glow");
+   $("#recent-activity").removeClass("text-glow");
+ });
+
  markersRef.on('value', function(snapshot) {
 
   if (initialDisplaySet == false) {
@@ -94,11 +103,13 @@ function setModalDisplay() {
           var key = (childNodes.key).toString();
           var truck = childNodes.val().truckID;
           markersRef.child(key).update({
-            status: "inactive"
+            status: "inactive",
+            inactiveReason: "stale"
           })
 
           trucksRef.child(truck).child("markers").child(key).update({
-            status: "inactive"
+            status: "inactive",
+            inactiveReason: "stale"
           })
 
         } else {
@@ -370,7 +381,6 @@ $("#upvote-btn, #downvote-btn").on("click", function() {
      var markerID = $(this).attr("markerID-data");
 
      currentUpVotes++;
-
      updateFbUpVoteCount(currentUpVotes, markerID);
 
   } else if ($(this).attr("id") == "downvote-btn") {
@@ -378,9 +388,11 @@ $("#upvote-btn, #downvote-btn").on("click", function() {
      var markerID = $(this).attr("markerID-data");
 
      currentDownVotes++;
-
      updateFbDownVoteCount(currentDownVotes, markerID);
   }
+
+  //*****ADDED WEDNESDAY*******///
+  //$("#upvote-btn, #downvote-btn").attr("disabled", "disabled");
 });
 
 function updateFbUpVoteCount(currentUpVotes, markerID) {
@@ -426,11 +438,13 @@ function updateFbDownVoteCount(currentDownVotes, markerID) {
 
       if(currentDownVotes == 3) {
         markersRef.child(markerID).update({
-          status: "inactive"
+          status: "inactive",
+          inactiveReason: "downvotes"
         })
 
         trucksRef.child(truckID).child("markers").child(markerID).update({
-          status: "inactive"
+          status: "inactive",
+          inactiveReason: "downvotes"
         });
       }
 
@@ -491,6 +505,7 @@ markersRef.on("child_added", function(snap) {
 markersRef.on("child_changed", function(snap) {
    var markerID = snap.val().markerID;
 
+   console.log("Status: " + snap.val().status)
    if(snap.val().status == "inactive") {
      removeMarkerFromDisplayAndSetModalAlert(markerID, snap);
    } else {
@@ -508,6 +523,19 @@ markersRef.on("child_changed", function(snap) {
      $("#num-of-downvotes").text(snap.val().downvotes);
      $("#activity").text(snap.val().recentActivity);
      $("#activity-date").text(convertTimestamp(snap.val().recentActivityTime));
+
+     //ADDED WEDNESDAY
+     $("#stats-modal-body").addClass("box-glow");
+     $("#recent-activity").addClass("text-glow");
+
+     if(modalTimeout != null) {
+       clearTimeout(modalTimeout);
+     }
+
+     modalTimeout = setTimeout(function() {
+       $("#stats-modal-body").removeClass("box-glow");
+       $("#recent-activity").removeClass("text-glow");
+     }, 2500)
    }
  }
 });
@@ -536,10 +564,7 @@ function removeMarkerFromDisplayAndSetModalAlert(markerID, snap) {
 
     setTimeout(function() {
      $("#stats-modal").modal("hide");
-     $("#removal-msg").hide();
-     $("#recent-activity").show();
-     $("#upvote-btn, #downvote-btn").removeAttr("disabled");
-   }, 5000)
+   }, 4000)
   }
 }
 
