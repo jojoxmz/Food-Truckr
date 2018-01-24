@@ -414,3 +414,25 @@ background-color: lightgrey;
 .hidden-divs {
   display: none;
 }
+
+#stats-modal-body,
+#query-modal-body {
+  border: 1px solid white;
+}
+
+#query-modal-body  {
+  transition: all 300ms linear;
+}
+
+#query-modal-body,
+#recent-activity {
+  transition: all 300ms linear;
+}
+
+.box-glow {
+  box-shadow: 0 0 15px white ;
+}
+
+.text-glow {
+  text-shadow: 0 0 5px #ffc107;
+}
