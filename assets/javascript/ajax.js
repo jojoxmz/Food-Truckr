@@ -48,8 +48,9 @@ function displayTruckInfo(){
         i++
       }
 
-      console.log(response.businesses)
-      console.log(sortedRatings)
+console.log(response.businesses)
+console.log(sortedRatings)
+    
 
     });
   });
