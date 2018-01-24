@@ -91,9 +91,17 @@ function setModalDisplay() {
       if(childNodes.val().status == "active") {
 
         if(isMarkerStale(childNodes.val().pinTime)) {
-          childNodes.update({
+
+          var key = (childNodes.key).toString();
+          var truck = childNodes.val().truckID;
+          markersRef.child(key).update({
             status: "inactive"
           })
+
+          trucksRef.child(truck).child("markers").child(key).update({
+            status: "inactive"
+          })
+
         } else {
           var markerID = (childNodes.key).toString();
           var lat = childNodes.val().lat;
