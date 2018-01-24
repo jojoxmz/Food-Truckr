@@ -87,7 +87,6 @@ function setModalDisplay() {
     snapshot.forEach(function(childNodes) {
 
       console.log(isMarkerStale(childNodes.val().pinTime));
-
       if(childNodes.val().status == "active") {
 
         if(isMarkerStale(childNodes.val().pinTime)) {
