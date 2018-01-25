@@ -37,6 +37,7 @@ var currentLocation = {};
 var locationInfoWindow = null;
 var locationRadiusCircle = null;
 var modalTimeout = null;
+var infowindow = null;
 
 //Class that will store marker-related data, instances to be passed to firebase
  class MarkerDataObj {
@@ -80,15 +81,16 @@ function setModalDisplay() {
   $("#upvote-btn").attr("markerID-data", this.markerID);
   $("#downvote-btn").attr("markerID-data", this.markerID);
   $("#stats-modal").modal("show");
+  clearInfoWindow();
  }
 
- $("#stats-modal").on("hidden.bs.modal", function () {
-   $("#removal-msg").hide();
-   $("#recent-activity").show();
-   $("#upvote-btn, #downvote-btn").removeAttr("disabled");
-   $("#stats-modal-body").removeClass("box-glow");
-   $("#recent-activity").removeClass("text-glow");
- });
+$("#stats-modal").on("hidden.bs.modal", function () {
+  $("#removal-msg").hide();
+  $("#recent-activity").show();
+  $("#upvote-btn, #downvote-btn").removeAttr("disabled");
+  $("#stats-modal-body").removeClass("box-glow");
+  $("#recent-activity").removeClass("text-glow");
+});
 
  markersRef.on('value', function(snapshot) {
 
@@ -124,7 +126,6 @@ function setModalDisplay() {
           var recentActivityTime = childNodes.val().recentActivityTime;
           var pinTime = childNodes.val().pinTime;
 
-          var infowindow = new google.maps.InfoWindow;
           var marker = new google.maps.Marker({
             position: {lat: lat, lng: lng},
             map: map,
@@ -138,11 +139,21 @@ function setModalDisplay() {
             pinTime: pinTime
           });
 
+          function createInfoWindow(marker) {
+              google.maps.event.addListener(marker, 'click', function() {
+                clearInfoWindow();
+                infowindow = new google.maps.InfoWindow;
+                infowindow.setContent(this.title);
+                infowindow.open(map, this);
+           });
+         }
+          createInfoWindow(marker);
+
           markerArr.push(marker);
 
           //Enclosing reference to marker
           function attachClickEvent(marker) {
-            google.maps.event.addListener(marker, "click", setModalDisplay);
+            google.maps.event.addListener(marker, "dblclick", setModalDisplay);
           }
           attachClickEvent(marker);
         }
@@ -159,11 +170,16 @@ function initMap() {
   });
 
   google.maps.event.addListener(map, "click", function() {
-    if(locationRadiusCircle != null) {
-      locationRadiusCircle.setMap(null);
-      locationRadiusCircle = null;
-    }
+    resetLocationWindowAndCircle();
+    clearInfoWindow();
   })
+}
+
+function clearInfoWindow() {
+  if(infowindow != null) {
+    infowindow.close();
+    infowindow = null;
+  }
 }
 
 function resetLocationWindowAndCircle() {
@@ -360,9 +376,20 @@ function dropNewTruckPin(searchTerm, truckID) {
     //Push new marker to associative array
     markerArr.push(marker);
 
+    function createInfoWindow(marker) {
+      google.maps.event.addListener(marker, 'click', function() {
+        clearInfoWindow();
+        infowindow = new google.maps.InfoWindow;
+        infowindow.setContent(this.title);
+        infowindow.open(map, this);
+      });
+    }
+
+   createInfoWindow(marker);
+
     //Enclosing reference to marker
     function attachNewClickEvent(marker) {
-      google.maps.event.addListener(marker, "click", setModalDisplay)
+      google.maps.event.addListener(marker, "dblclick", setModalDisplay)
     }
 
     attachNewClickEvent(marker);
@@ -392,7 +419,10 @@ $("#upvote-btn, #downvote-btn").on("click", function() {
   }
 
   //*****ADDED WEDNESDAY*******///
-  //$("#upvote-btn, #downvote-btn").attr("disabled", "disabled");
+  $("#upvote-btn, #downvote-btn").attr("disabled", "disabled");
+  setTimeout(function() {
+    $("#stats-modal").modal("hide");
+  }, 2500)
 });
 
 function updateFbUpVoteCount(currentUpVotes, markerID) {
