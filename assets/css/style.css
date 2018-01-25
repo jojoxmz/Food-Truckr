@@ -304,23 +304,8 @@ color: white;
 }
 
 .logo{
-height: 200px;
+  max-height: 200px
 }
-
-.navMap li {
-  display:inline-block;
-  float:none;
-  margin:0 60px;
-  vertical-align:middle;
-}
-
-/*.modal-content  {
-    -webkit-border-radius: 0px !important;
-    -moz-border-radius: 0px !important;
-    border-radius: 0px !important; 
-}
-*/
-
 
 /*Mary's CSS start*/
 
@@ -456,5 +441,6 @@ background-color: lightgrey;
 .thumb-holder img {
   filter: brightness(40%);
 }
+
 
 }
