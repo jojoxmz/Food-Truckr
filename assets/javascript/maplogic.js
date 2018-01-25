@@ -56,10 +56,10 @@ var infowindow = null;
    }
  }
 
- function convertTimestamp(timestamp) {
-   var newDate = moment(timestamp).format();
-   return moment(newDate).fromNow();
- }
+function convertTimestamp(timestamp) {
+  var newDate = moment(timestamp).format();
+  return moment(newDate).fromNow();
+}
 
 function isMarkerStale(timestamp) {
   var newDate = moment(timestamp).format();
@@ -97,7 +97,6 @@ $("#stats-modal").on("hidden.bs.modal", function () {
   if (initialDisplaySet == false) {
     snapshot.forEach(function(childNodes) {
 
-      console.log(isMarkerStale(childNodes.val().pinTime));
       if(childNodes.val().status == "active") {
 
         if(isMarkerStale(childNodes.val().pinTime)) {
@@ -298,6 +297,8 @@ function testSearchTerm(searchTerm) {
          var foodTruckFound = false;
          for(var i = 0; i < response.businesses.length; i++) {
            if((response.businesses[i].name).toUpperCase().replace(regEx, '') == searchTerm.toUpperCase().replace(regEx, '')) {
+             resetLocationWindowAndCircle();
+             clearInfoWindow();
              dropNewTruckPin((response.businesses[i].name), (response.businesses[i].id));
              dismissModalForPinDrop();
              foodTruckFound = true;
@@ -360,6 +361,7 @@ function dropNewTruckPin(searchTerm, truckID) {
     var marker = new google.maps.Marker({
       position: {lat: newMarkerData.lat, lng: newMarkerData.lng},
       map: map,
+      animation: google.maps.Animation.DROP,
       title: newMarkerData.truckName,
       truckID: newMarkerData.truckID,
       markerID: newMarkerData.markerID,
@@ -385,7 +387,7 @@ function dropNewTruckPin(searchTerm, truckID) {
       });
     }
 
-   createInfoWindow(marker);
+    createInfoWindow(marker);
 
     //Enclosing reference to marker
     function attachNewClickEvent(marker) {
@@ -397,7 +399,6 @@ function dropNewTruckPin(searchTerm, truckID) {
     var updates = {};
     updates['/markers/' + newKey] = newMarkerData;
     updates['/trucks/' + newMarkerData.truckID + '/markers/' + newKey] = newMarkerData;
-    console.log(updates);
     database.ref().update(updates);
   });
 }
@@ -526,16 +527,12 @@ markersRef.on("child_added", function(snap) {
       attachClickEvent(marker);
       markerArr.push(marker);
     }
-    console.log("Marker array on child added: " + markerArr);
-    console.log(markerArr);
-    console.log("Array length on child added: " +  markerArr.length);
   }
 });
 
 markersRef.on("child_changed", function(snap) {
    var markerID = snap.val().markerID;
 
-   console.log("Status: " + snap.val().status)
    if(snap.val().status == "inactive") {
      removeMarkerFromDisplayAndSetModalAlert(markerID, snap);
    } else {

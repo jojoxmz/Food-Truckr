@@ -385,8 +385,10 @@ background-color: lightgrey;
 }
 
 .thumb-truck-name {
-  color: #ffffff;
-  padding: 4% 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 4%;
+  padding-bottom: 4%;
   position: absolute;
   top: 40%;
   width: 100%;
@@ -434,13 +436,11 @@ background-color: lightgrey;
 }
 
 @media screen and (max-width: 991px) {
-.thumb-truck-name {
-  color: white;
-}
+  .thumb-truck-name {
+    color: white;
+  }
 
-.thumb-holder img {
-  filter: brightness(40%);
-}
-
-
+  .thumb-holder img {
+    filter: brightness(40%);
+  }
 }
