@@ -10,7 +10,6 @@ h6 {
 font-weight: 700;
 font-family: 'Montserrat'; }
 
-
 hr.star-light,
 hr.star-dark {
 max-width: 15rem;
@@ -36,7 +35,7 @@ border-color: #fff; }
 
 hr.star-light:after {
 color: #fff;
-background-color: #18BC9C; }
+background-color: slategrey; }
 
 hr.star-dark {
 border-color: #2C3E50; }
@@ -46,7 +45,7 @@ color: #2C3E50;
 background-color: white; }
 
 section {
-padding: 6rem 0; }
+padding: 5rem 0; }
 section h2 {
 font-size: 2.25rem;
 line-height: 2rem; }
@@ -56,14 +55,8 @@ font-size: 3rem;
 line-height: 2.5rem; } }
 
 .btn-xl {
-padding: 1rem 1.75rem;
+padding: .5rem 1.5rem;
 font-size: 1.25rem; }
-
-.btn-social {
-width: 3.25rem;
-height: 3.25rem;
-font-size: 1.25rem;
-line-height: 2rem; }
 
 .scroll-to-top {
 z-index: 1042;
@@ -89,11 +82,12 @@ letter-spacing: 0.0625rem; }
 #mainNav .navbar-nav li.nav-item a.nav-link {
 color: #fff; }
 #mainNav .navbar-nav li.nav-item a.nav-link:hover {
-color: #18BC9C; }
+color: #fb6973; }
 #mainNav .navbar-nav li.nav-item a.nav-link:active, #mainNav .navbar-nav li.nav-item a.nav-link:focus {
-color: #fff; }
+color: #fff;
+ }
 #mainNav .navbar-nav li.nav-item a.nav-link.active {
-color: #18BC9C; }
+color: #fb6973; }
 #mainNav .navbar-toggler {
 font-size: 80%;
 padding: 0.8rem; }
@@ -114,10 +108,10 @@ transition: font-size 0.3s; }
 margin-top: 0; }
 #mainNav .navbar-nav > li.nav-item > a.nav-link.active {
 color: #fff;
-background: #18BC9C; }
+background: #fb6973; }
 #mainNav .navbar-nav > li.nav-item > a.nav-link.active:active, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:focus, #mainNav .navbar-nav > li.nav-item > a.nav-link.active:hover {
 color: #fff;
-background: #18BC9C; }
+background: #fb6973; }
 #mainNav.navbar-shrink {
 padding-top: 0.5rem;
 padding-bottom: 0.5rem; }
@@ -125,8 +119,8 @@ padding-bottom: 0.5rem; }
 font-size: 1.5em; } }
 
 header.masthead {
-padding-top: calc(6rem + 72px);
-padding-bottom: 6rem; }
+padding-top: 6rem;
+padding-bottom: 2rem; }
 header.masthead h1 {
 font-size: 3rem;
 line-height: 3rem; }
@@ -156,7 +150,7 @@ margin-bottom: 15px; }
 -moz-transition: all ease 0.5s;
 transition: all ease 0.5s;
 opacity: 0;
-background-color: rgba(24, 188, 156, 0.9); }
+}
 .portfolio .portfolio-item .portfolio-item-caption:hover {
 opacity: 1; }
 .portfolio .portfolio-item .portfolio-item-caption .portfolio-item-caption-content {
@@ -232,7 +226,7 @@ top: 0;
 opacity: 1; }
 
 .floating-label-form-group-with-focus label {
-color: #18BC9C; }
+color: #fb6973; }
 
 form .row:first-child .floating-label-form-group {
 border-top: 1px solid #e9ecef; }
@@ -246,10 +240,9 @@ color: #fff; }
 .copyright {
 background-color: #1a252f; }
 
-a {
-color: #18BC9C; }
-a:focus, a:hover, a:active {
-color: #128f76; }
+a{
+color: black;
+}
 
 .btn {
 border-width: 2px; }
@@ -261,24 +254,25 @@ background-color: slategrey !important; }
 background-color: #2C3E50 !important; }
 
 .text-primary {
-color: #18BC9C !important; }
+color: #fb6973 !important; }
 
 .text-secondary {
 color: #2C3E50 !important; }
 
 .btn-primary {
-background-color: #18BC9C;
-border-color: #18BC9C; }
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
-background-color: #128f76;
-border-color: #128f76; }
-
-.btn-secondary {
 background-color: #2C3E50;
 border-color: #2C3E50; }
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+background-color: #fb6973;
+border-color: #fb6973; }
+
+.btn-secondary {
+background-color: white;
+border-color: white;
+color: black; }
 .btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active {
-background-color: #1a252f;
-border-color: #1a252f; }
+background-color: #fb6973;
+border-color: #fb6973; }
 
 #map {
 height: 550px;
@@ -309,6 +303,25 @@ color: white;
   font-size: 40px;
 }
 
+.logo{
+height: 200px;
+}
+
+.navMap li {
+  display:inline-block;
+  float:none;
+  margin:0 60px;
+  vertical-align:middle;
+}
+
+/*.modal-content  {
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important; 
+}
+*/
+
+
 /*Mary's CSS start*/
 
 #truck-1-name, #truck-2-name, #truck-3-name, #truck-4-name, #truck-5-name, #truck-6-name{
@@ -322,6 +335,7 @@ color: white;
 
 .portfolio-modal-dialog{
 background-color: lightgrey;
+
 }
 
 .rating-div, .review-div, .hours-div, .phone-div {
@@ -350,17 +364,14 @@ background-color: lightgrey;
   font-family: 'Lato';
 }
 
-.dropdown-menu {
-}
-
 .dropdown-item:hover {
   cursor: pointer;
 }
 
 #dropdownMenu2:active,
 #dropdownMenu2:focus {
-  background-color: #18BC9C;
-  border-color: #18BC9C;
+  background-color: #fb6973;
+  border-color: #fb6973;
 }
 
 .truck-thumb {

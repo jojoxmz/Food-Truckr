@@ -81,7 +81,7 @@
 <header class="masthead bg-primary text-white text-center">
   <div class="container">
     <h1 class="text-uppercase mb-0">Food Truckr</h1>
-    <img class="img-fluid" src="./assets/images/food.png" alt="logo">
+    <img class="img-fluid logo" src="./assets/images/food.png" alt="logo">
     <h2 class="font-weight-light mb-0">Eat up you stupid pigs.</h2>
   </div>
 </header>
@@ -94,50 +94,57 @@
 
     <div id="map"></div>
 
-    <div class= "buttons">
-      <div class= "text-center main-btn">
-        <button id="pin-truck-btn" type="button" class="btn btn-primary col-md-3 text-center" data-toggle="modal" data-target="#exampleModal">Pin a Food Truck</button>
 
-        <!-- Modal -->
-        <div class="modal fade truckQuery" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div id="query-modal-body" class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Truck at Your Location:</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body text-center">
-                <form class="form-inline my-2 my-lg-0">
-                  <input id="search-term" class="form-control mr-sm-2 text-center" id="search-term" type="search" placeholder="Search" aria-label="Search">
-                  <button id="truck-query" class="btn my-2 my-sm-0" type="submit" disabled>Submit</button>
-                </form>
-                <p id="noFoodTruckFound" class="mt-3">No food truck found with that name - try again!</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
+<nav class="navbar navbar-expand-lg bg-secondary" id="secondNav">
+        
+        <div id="navbarResponsive">
+            <ul class="navbar-nav navMap">
+                <li class="nav-item navMapItems">
+                    <button id="pin-truck-btn" type="button" class="btn btn-primary btn-lg text-center" data-toggle="modal" data-target="#exampleModal">Pin a Food Truck</button>
+
+                    <div class="modal fade truckQuery" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Truck at Your Location:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body text-center">
+                    <form class="form-inline my-2 my-lg-0">
+                    <input id="search-term" class="form-control mr-sm-2 text-center" id="search-term" type="search" placeholder="Search" aria-label="Search">
+                    <button id="truck-query" class="btn btn-secondary" type="submit" disabled>Submit</button>
+                    </form>
+                    <p id="noFoodTruckFound" class="mt-3">No food truck found with that name - try again!</p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                </li>
+                <li class="nav-item navMapItems">
+                    <div class="dropdown d-inline">
+                    <button class="btn btn-primary btn-lg dropdown-toggle text-center" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Food Truck Near Me
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="dropdownMenu2">
+                    <button class="dropdown-item" type="button" data-number=".25">.25 miles</button>
+                    <button class="dropdown-item" type="button" data-number=".5">.5 miles</button>
+                    <button class="dropdown-item" type="button" data-number=".75">.75 miles</button>
+                    <button class="dropdown-item" type="button" data-number="1">1 miles</button>
+                    </div>
+                    </div>
+                </li>
+                <li class="nav-item navMapItems">
+                    <button class="btn btn-primary btn-lg reset text-center" type="submit" value="Input">Reset Map</button>
+                </li>
+            </ul>
         </div>
-
-        <div class="dropdown d-inline">
-          <button class="btn btn-primary dropdown-toggle col-md-3" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Find a Food Truck Near Me
-          </button>
-          <div class="dropdown-menu dropdown-menu-right text-center" aria-labelledby="dropdownMenu2">
-            <button class="dropdown-item" type="button" data-number=".25">.25 miles</button>
-            <button class="dropdown-item" type="button" data-number=".5">.5 miles</button>
-            <button class="dropdown-item" type="button" data-number=".75">.75 miles</button>
-            <button class="dropdown-item" type="button" data-number="1">1 miles</button>
-          </div>
-        </div>
-
-        <button class="btn btn-primary col-md-3 reset" type="submit" value="Input">Reset Map</button>
-
-    </div>
-    </div>
+  </nav>
+</div>
 
 <!-- thumbnails starts here -->
     <div class="row">
@@ -174,7 +181,7 @@
               <div class="thumb-holder mb-4">
                 <a href="#portfolio-modal-4" class="d-block mb-4 w-100">
                   <img id="truck-4-thumbnail" class="img-fluid w-100 truck-thumb" src="" alt="food-truck-image">
-                  <div class="w-100 thumb-truck-name"id="thumb-truck-4-name"></div>
+                  <div class="w-100 thumb-truck-name" id="thumb-truck-4-name"></div>
                 </a>
               </div>
             </div>
@@ -182,7 +189,7 @@
               <div class="thumb-holder mb-4">
                 <a href="#portfolio-modal-5" class="d-block w-100">
                   <img id="truck-5-thumbnail" class="img-fluid w-100 truck-thumb" src="" alt="food-truck-image">
-                  <div class="w-100 thumb-truck-name"id="thumb-truck-5-name"></div>
+                  <div class="w-100 thumb-truck-name" id="thumb-truck-5-name"></div>
                 </a>
               </div>
             </div>
@@ -210,7 +217,7 @@
         <div class="row">
           <div class="col-lg-4 ml-auto">
             <p class="lead">Our Mission: Food Truckr is Denver's up-and-coming web and mobile friendly food truck location service. Our team is dedicated to connecting and hungry city dwelers with their favorite mobilized dining spots.
-</p>
+            </p>
           </div>
           <div class="col-lg-4 mr-auto">
             <p class="lead">With the help of our users, pin drops on our google map can show our community where there favorite food trucks have been spotted. Thanks to yelp, users can then get additional infomation on the food truck with our extensive database.
@@ -292,7 +299,7 @@
     <div class="portfolio-modal mfp-hide hidden-divs" id="portfolio-modal-1">
       <div class="portfolio-modal-dialog bg-white">
         <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-          <i class="fa fa-3x fa-times"></i>
+          <i class="fa fa-3x fa-times dismiss"></i>
         </a>
         <div class="container text-center foodinfo">
           <div class="row innerblok">
@@ -305,7 +312,7 @@
               <div class="phone-div" id="truck-1-phone"></div>
               <div class="review-div" id="truck-1-reviews"></div>
               <div class="rating-div" id="truck-1-rating"></div>
-            <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+            <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss dismiss" href="#">
               <i class="fa fa-close"></i>
               Go Back</a>
             </div>
@@ -318,7 +325,7 @@
     <div class="portfolio-modal mfp-hide hidden-divs" id="portfolio-modal-2">
       <div class="portfolio-modal-dialog bg-white">
         <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-          <i class="fa fa-3x fa-times"></i>
+          <i class="fa fa-3x fa-times dismiss"></i>
         </a>
         <div class="container text-center foodinfo">
           <div class="row innerblok">
@@ -332,7 +339,7 @@
               <div class="phone-div" id="truck-2-phone"></div>
               <div class="review-div" id="truck-2-reviews"></div>
               <div class="rating-div" id="truck-2-rating"></div>
-              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss dismiss" href="#">
                 <i class="fa fa-close"></i>
                 Go Back</a>
               </div>
@@ -345,7 +352,7 @@
     <div class="portfolio-modal mfp-hide hidden-divs" id="portfolio-modal-3">
       <div class="portfolio-modal-dialog bg-white">
         <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-          <i class="fa fa-3x fa-times"></i>
+          <i class="fa fa-3x fa-times dismiss"></i>
         </a>
         <div class="container text-center">
           <div class="row innerblok">
@@ -359,7 +366,7 @@
               <div class="phone-div" id="truck-3-phone"></div>
               <div class="review-div" id="truck-3-reviews"></div>
               <div class="rating-div" id="truck-3-rating"></div>
-              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss dismiss" href="#">
                 <i class="fa fa-close"></i>
                 Go Back</a>
               </div>
@@ -372,7 +379,7 @@
     <div class="portfolio-modal mfp-hide hidden-divs" id="portfolio-modal-4">
       <div class="portfolio-modal-dialog bg-white">
         <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-          <i class="fa fa-3x fa-times"></i>
+          <i class="fa fa-3x fa-times dismiss"></i>
         </a>
         <div class="container text-center">
           <div class="row innerblok">
@@ -386,7 +393,7 @@
               <div class="phone-div" id="truck-4-phone"></div>
               <div class="review-div" id="truck-4-reviews"></div>
               <div class="rating-div" id="truck-4-rating"></div>
-              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss dismiss" href="#">
                 <i class="fa fa-close"></i>
                 Go Back</a>
               </div>
@@ -399,7 +406,7 @@
     <div class="portfolio-modal mfp-hide hidden-divs" id="portfolio-modal-5">
       <div class="portfolio-modal-dialog bg-white">
         <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-          <i class="fa fa-3x fa-times"></i>
+          <i class="fa fa-3x fa-times dismiss"></i>
         </a>
         <div class="container text-center">
           <div class="row innerblok">
@@ -413,7 +420,7 @@
               <div class="phone-div" id="truck-5-phone"></div>
               <div class="review-div" id="truck-5-reviews"></div>
               <div class="rating-div" id="truck-5-rating"></div>
-              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss dismiss" href="#">
                 <i class="fa fa-close"></i>
                 Go Back</a>
               </div>
@@ -426,7 +433,7 @@
     <div class="portfolio-modal mfp-hide hidden-divs" id="portfolio-modal-6">
       <div class="portfolio-modal-dialog bg-white">
         <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-          <i class="fa fa-3x fa-times"></i>
+          <i class="fa fa-3x fa-times dismiss"></i>
         </a>
         <div class="container text-center">
           <div class="row innerblok">
@@ -440,7 +447,7 @@
               <div class="phone-div" id="truck-6-phone"></div>
               <div class="review-div" id="truck-6-reviews"></div>
               <div class="rating-div" id="truck-6-rating"></div>
-              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
+              <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss dismiss" href="#">
                 <i class="fa fa-close"></i>
                 Go Back</a>
               </div>

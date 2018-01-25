@@ -48,6 +48,10 @@ function displayTruckInfo(){
         i++
       }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 console.log(response.businesses)
 console.log(sortedRatings)
     
@@ -118,3 +122,7 @@ $.each(thumbnailArray, function(i){
     }
   });
 });
+
+$(".portfolio-cards").on("click", ".dismiss", function(){
+ resetHiddenDivs();
+})
