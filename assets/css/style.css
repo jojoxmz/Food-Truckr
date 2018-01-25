@@ -447,3 +447,14 @@ background-color: lightgrey;
 .text-glow {
   text-shadow: 0 0 5px #ffc107;
 }
+
+@media screen and (max-width: 991px) {
+.thumb-truck-name {
+  color: white;
+}
+
+.thumb-holder img {
+  filter: brightness(40%);
+}
+
+}
