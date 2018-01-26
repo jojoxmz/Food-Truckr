@@ -524,8 +524,19 @@ markersRef.on("child_added", function(snap) {
         recentActivityTime: snap.val().recentActivityTime
       });
 
+      function createInfoWindow(marker) {
+        google.maps.event.addListener(marker, 'click', function() {
+          clearInfoWindow();
+          infowindow = new google.maps.InfoWindow;
+          infowindow.setContent(this.title);
+          infowindow.open(map, this);
+        });
+      }
+
+      createInfoWindow(marker);
+
       function attachClickEvent(marker) {
-        google.maps.event.addListener(marker, "click", setModalDisplay)
+        google.maps.event.addListener(marker, "dblclick", setModalDisplay)
       }
 
       attachClickEvent(marker);
