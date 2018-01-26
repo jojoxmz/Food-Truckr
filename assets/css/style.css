@@ -414,6 +414,69 @@ background-color: lightgrey;
   text-align: left;
 }
 
+#truck-1-image, #truck-2-image, #truck-3-image, #truck-4-image, #truck-5-image, #truck-6-image{
+  max-height: 263px;
+  overflow: hidden;
+  position: relative;
+  padding-right: 0;
+  border-radius: 20px;
+}
+
+.projectPicHolder{
+min-height: 263px;
+}
+
+.thumb-holder img,
+.thumb-holder .thumb-truck-name {
+  transition: all 500ms ease;
+}
+.thumb-holder:hover img {
+  filter: brightness(40%);
+}
+.thumb-holder:hover .thumb-truck-name {
+  color: white;
+}
+.thumb-truck-name {
+  color: #ffffff;
+  padding: 4% 0;
+  position: absolute;
+  top: 40%;
+  width: 100%;
+  font-family: 'Montserrat';
+  font-size: 2.5rem;
+  color: transparent;
+  z-index: 2;
+}
+#top-trucks {
+  text-align: center;
+  color:  #2C3E50;
+}
+#removal-msg {
+  color: red;
+  text-shadow: 0 0 5px red;
+  display: none;
+}
+.hidden-divs {
+  display: none;
+}
+#stats-modal-body,
+#query-modal-body {
+  border: 1px solid white;
+}
+#query-modal-body  {
+  transition: all 300ms linear;
+}
+#query-modal-body,
+#recent-activity {
+  transition: all 300ms linear;
+}
+.box-glow {
+  box-shadow: 0 0 15px white ;
+}
+.text-glow {
+  text-shadow: 0 0 5px #ffc107;
+}
+
 /*Greg CSS*/
 
 #stats-footer {
@@ -525,7 +588,6 @@ background-color: lightgrey;
     filter: brightness(40%);
   }
 }
-
 
 .instruction-text {
   font-size: 20px;
