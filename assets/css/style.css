@@ -388,22 +388,8 @@ a {
 }
 
 .logo {
-  height: 200px;
+  max-height: 200px
 }
-
-.navMap li {
-  display: inline-block;
-  float: none;
-  margin: 0 60px;
-  vertical-align: middle;
-}
-
-/*.modal-content  {
-    -webkit-border-radius: 0px !important;
-    -moz-border-radius: 0px !important;
-    border-radius: 0px !important;
-}
-*/
 
 /*Mary's CSS start*/
 
@@ -478,8 +464,10 @@ a {
 }
 
 .thumb-truck-name {
-  color: #ffffff;
-  padding: 4% 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 4%;
+  padding-bottom: 4%;
   position: absolute;
   top: 40%;
   width: 100%;
@@ -503,6 +491,7 @@ a {
 .hidden-divs {
   display: none;
 }
+
 
 #stats-modal-body, #query-modal-body, #instructions-modal-body {
   border: 1px solid white;
@@ -533,9 +522,11 @@ a {
   }
 }
 
+
 .instruction-text {
   font-size: 20px;
   line-height: 1.5;
   padding-left: 1.0em;
   text-indent: -.6em;
 }
+
