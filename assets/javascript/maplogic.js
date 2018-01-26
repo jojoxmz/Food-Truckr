@@ -514,7 +514,6 @@ markersRef.on("child_added", function(snap) {
       var marker = new google.maps.Marker({
         position: {lat: snap.val().lat, lng: snap.val().lng},
         map: map,
-        animation: google.maps.Animation.DROP,
         title: snap.val().truckName,
         truckID: snap.val().truckID,
         markerID: snap.val().markerID,
