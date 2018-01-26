@@ -107,7 +107,7 @@ function initMap() {
     clearInfoWindow();
   })
 
-  markersRef.once('value', function(snapshot) {
+  markersRef.once('value').then(function(snapshot) {
 
     snapshot.forEach(function(childNodes) {
 
