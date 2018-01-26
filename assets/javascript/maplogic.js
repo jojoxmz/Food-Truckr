@@ -11,7 +11,6 @@ var config = {
 firebase.initializeApp(config);
 
 var database = firebase.database();
-
 var connectionsRef = database.ref("/connections");
 var connectedRef = database.ref(".info/connected");
 var markersRef = firebase.database().ref("markers");
@@ -38,6 +37,7 @@ var locationInfoWindow = null;
 var locationRadiusCircle = null;
 var modalTimeout = null;
 var infowindow = null;
+var statsModalTimeout = null;
 
 //Class that will store marker-related data, instances to be passed to firebase
  class MarkerDataObj {
@@ -90,11 +90,25 @@ $("#stats-modal").on("hidden.bs.modal", function () {
   $("#upvote-btn, #downvote-btn").removeAttr("disabled");
   $("#stats-modal-body").removeClass("box-glow");
   $("#recent-activity").removeClass("text-glow");
+
+  if(statsModalTimeout != null) {
+    clearTimeout(statsModalTimeout);
+  }
 });
 
- markersRef.on('value', function(snapshot) {
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 12,
+    center: denverCenter
+  });
 
-  if (initialDisplaySet == false) {
+  google.maps.event.addListener(map, "click", function() {
+    resetLocationWindowAndCircle();
+    clearInfoWindow();
+  })
+
+  markersRef.once('value', function(snapshot) {
+
     snapshot.forEach(function(childNodes) {
 
       if(childNodes.val().status == "active") {
@@ -113,7 +127,7 @@ $("#stats-modal").on("hidden.bs.modal", function () {
             inactiveReason: "stale"
           })
 
-        } else {
+          } else {
           var markerID = (childNodes.key).toString();
           var lat = childNodes.val().lat;
           var lng = childNodes.val().lng;
@@ -139,18 +153,17 @@ $("#stats-modal").on("hidden.bs.modal", function () {
           });
 
           function createInfoWindow(marker) {
-              google.maps.event.addListener(marker, 'click', function() {
-                clearInfoWindow();
-                infowindow = new google.maps.InfoWindow;
-                infowindow.setContent(this.title);
-                infowindow.open(map, this);
-           });
-         }
-          createInfoWindow(marker);
+            google.maps.event.addListener(marker, 'click', function() {
+              clearInfoWindow();
+              infowindow = new google.maps.InfoWindow;
+              infowindow.setContent(this.title);
+              infowindow.open(map, this);
+            });
+          }
 
+          createInfoWindow(marker);
           markerArr.push(marker);
 
-          //Enclosing reference to marker
           function attachClickEvent(marker) {
             google.maps.event.addListener(marker, "dblclick", setModalDisplay);
           }
@@ -158,20 +171,7 @@ $("#stats-modal").on("hidden.bs.modal", function () {
         }
       }
     });
-  }
-    initialDisplaySet = true;
-});
-
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: denverCenter
   });
-
-  google.maps.event.addListener(map, "click", function() {
-    resetLocationWindowAndCircle();
-    clearInfoWindow();
-  })
 }
 
 function clearInfoWindow() {
@@ -421,7 +421,7 @@ $("#upvote-btn, #downvote-btn").on("click", function() {
 
   //*****ADDED WEDNESDAY*******///
   $("#upvote-btn, #downvote-btn").attr("disabled", "disabled");
-  setTimeout(function() {
+  statsModalTimeout = setTimeout(function() {
     $("#stats-modal").modal("hide");
   }, 2500)
 });
@@ -564,7 +564,7 @@ markersRef.on("child_changed", function(snap) {
        $("#recent-activity").removeClass("text-glow");
      }, 2500)
    }
- }
+  }
 });
 
 function removeMarkerFromDisplayAndSetModalAlert(markerID, snap) {
