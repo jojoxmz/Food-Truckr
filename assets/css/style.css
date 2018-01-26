@@ -45,6 +45,12 @@ hr.star-dark:after {
   background-color: white;
 }
 
+hr.star-dark-icon:after{
+  color: #2C3E50;
+  background-image: url("../images/vintage.png");
+  background-repeat:no-repeat;
+}
+
 section {
   padding: 5rem 0;
 }
@@ -391,90 +397,76 @@ a {
   max-height: 200px
 }
 
+
 /*Mary's CSS start*/
+
+.innerblok{
+  background-color: #292929;
+  background-image: url("../images/vintage.png");
+  background-repeat:no-repeat;
+  background-size: cover;
+/*  outline-style: solid;
+  outline-color: slategrey;
+  outline-width: 80px;
+  outline-offset: 0px;*/
+  border: 3px ridge #292929;
+  padding: 0px, 30px, 30px, 30px;
+  margin: 0px 30px;
+}
+
 
 #truck-1-name, #truck-2-name, #truck-3-name, #truck-4-name, #truck-5-name, #truck-6-name{
   font-size: 25px;
   border: 5px solid #292929;
-  outline: 5px solid #e3e3e3;
-  margin: 5px;
+  outline: 5px dotted #fb6973;
+  margin-top: 60px;
   padding: 5px;
 }
+
 .portfolio-modal-dialog{
 background-color: lightgrey;
 }
 .rating-div, .review-div, .hours-div, .phone-div {
   font-family: 'lato';
-  padding: 5px;
-  margin:10px;
-  width: 650px;
+  padding: 10px;
+  margin:15px;
+  max-width: 650px;
+  font-weight: bold;
+  border-radius: 20px;
   border-style: solid;
-  border-width: 3px;
-  border-color: lightgrey;
+  border-width: 1px;
+  border-color: #212529;
   text-align: left;
+  background-color: white;
+}
+
+.rating-div, .hours-div, .phone-div{
+  text-align: center;
 }
 
 #truck-1-image, #truck-2-image, #truck-3-image, #truck-4-image, #truck-5-image, #truck-6-image{
   max-height: 263px;
   overflow: hidden;
   position: relative;
-  padding-right: 0;
-  border-radius: 20px;
-}
+/*  padding-right: 0;
+*/  border-radius: 20px;
+/*  margin-bottom: 10px;
+*/  border: 1px solid #292929;
+/*  margin-top: 20px;
+*/}
 
 .projectPicHolder{
 min-height: 263px;
+border-color: darkgrey;
+/*border-style: dotted;*/
 }
 
-.thumb-holder img,
-.thumb-holder .thumb-truck-name {
-  transition: all 500ms ease;
+.portfolio-modal-dismiss{
+margin: 10px 0px 60px 0px;
 }
-.thumb-holder:hover img {
-  filter: brightness(40%);
-}
-.thumb-holder:hover .thumb-truck-name {
-  color: white;
-}
-.thumb-truck-name {
-  color: #ffffff;
-  padding: 4% 0;
-  position: absolute;
-  top: 40%;
-  width: 100%;
-  font-family: 'Montserrat';
-  font-size: 2.5rem;
-  color: transparent;
-  z-index: 2;
-}
-#top-trucks {
-  text-align: center;
-  color:  #2C3E50;
-}
-#removal-msg {
-  color: red;
-  text-shadow: 0 0 5px red;
-  display: none;
-}
-.hidden-divs {
-  display: none;
-}
-#stats-modal-body,
-#query-modal-body {
-  border: 1px solid white;
-}
-#query-modal-body  {
-  transition: all 300ms linear;
-}
-#query-modal-body,
-#recent-activity {
-  transition: all 300ms linear;
-}
-.box-glow {
-  box-shadow: 0 0 15px white ;
-}
-.text-glow {
-  text-shadow: 0 0 5px #ffc107;
+
+.portfolio-modal-dialog{
+  background: lightgrey;
 }
 
 /*Greg CSS*/
