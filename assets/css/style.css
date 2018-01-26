@@ -393,22 +393,20 @@ a {
 
 /*Mary's CSS start*/
 
-#truck-1-name, #truck-2-name, #truck-3-name, #truck-4-name, #truck-5-name, #truck-6-name {
+#truck-1-name, #truck-2-name, #truck-3-name, #truck-4-name, #truck-5-name, #truck-6-name{
   font-size: 25px;
   border: 5px solid #292929;
   outline: 5px solid #e3e3e3;
   margin: 5px;
   padding: 5px;
 }
-
-.portfolio-modal-dialog {
-  background-color: lightgrey;
+.portfolio-modal-dialog{
+background-color: lightgrey;
 }
-
 .rating-div, .review-div, .hours-div, .phone-div {
   font-family: 'lato';
   padding: 5px;
-  margin: 10px;
+  margin:10px;
   width: 650px;
   border-style: solid;
   border-width: 3px;
