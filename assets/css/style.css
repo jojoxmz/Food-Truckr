@@ -513,6 +513,12 @@ a {
   text-shadow: 0 0 5px #ffc107;
 }
 
+.thank-you{
+  display:none;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
 @media screen and (max-width: 991px) {
   .thumb-truck-name {
     color: white;

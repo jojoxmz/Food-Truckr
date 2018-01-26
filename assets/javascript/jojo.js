@@ -1,6 +1,10 @@
 var myform = $("form#myform");
+var thankYou= $(".thank-you");
+
 myform.submit(function(event){
 	event.preventDefault();
+   	myform.empty();
+   	thankYou.show();
 
   // Change to your service ID, or keep using the default service
   var service_id = "default_service";
