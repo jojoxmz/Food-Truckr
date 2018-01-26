@@ -3,7 +3,7 @@ var thankYou= $(".thank-you");
 
 myform.submit(function(event){
 	event.preventDefault();
-   	myform.empty();
+   	myform.hide();
    	thankYou.show();
 
   // Change to your service ID, or keep using the default service
